@@ -17,8 +17,6 @@ Functionalities for projects data
 
 * Add new project
 * View project summary
-* Edit project team
-* Delete unfinished project
 
 ## Launching
 
