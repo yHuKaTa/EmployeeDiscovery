@@ -31,7 +31,7 @@ public class EmployeeBuilder {
     }
 
     public Employee build() {
-        return new Employee(firstName, lastName, passportId, projects);
+        return new Employee(firstName, lastName, passportId, false, projects);
     }
 
     public static EmployeeBuilder builder() {

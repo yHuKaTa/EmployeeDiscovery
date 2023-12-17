@@ -22,6 +22,9 @@ public class Employee {
     @Column(name = "passport_id", unique = true)
     private String passportId;
 
+    @Column(name = "is_fired")
+    private boolean isFired;
+
     @ManyToMany
     @JoinTable(name = "employee_project", joinColumns = {
             @JoinColumn(name = "employee_id", referencedColumnName = "id")
@@ -31,13 +34,15 @@ public class Employee {
     private Set<Project> projects;
 
     public Employee() {
+        this.isFired = false;
         this.projects = new HashSet<>();
     }
 
-    public Employee(String firstName, String lastName, String passportId, Set<Project> projects) {
+    public Employee(String firstName, String lastName, String passportId, boolean isFired, Set<Project> projects) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.passportId = passportId;
+        this.isFired = isFired;
         this.projects = projects;
     }
 
@@ -63,6 +68,14 @@ public class Employee {
 
     public void setPassportId(String passportId) {
         this.passportId = passportId;
+    }
+
+    public boolean isFired() {
+        return isFired;
+    }
+
+    public void setFired() {
+        isFired = true;
     }
 
     public Set<Project> getProjects() {
