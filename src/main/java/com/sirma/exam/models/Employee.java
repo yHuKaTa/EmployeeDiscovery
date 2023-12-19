@@ -2,7 +2,6 @@ package com.sirma.exam.models;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -26,24 +25,25 @@ public class Employee {
     private boolean isFired;
 
     @ManyToMany
-    @JoinTable(name = "employee_project", joinColumns = {
+    @JoinTable(name = "employee_job", joinColumns = {
             @JoinColumn(name = "employee_id", referencedColumnName = "id")
             }, inverseJoinColumns = {
-                    @JoinColumn(name = "project_id", referencedColumnName = "id")
+                    @JoinColumn(name = "job_id", referencedColumnName = "id")
     })
-    private Set<Project> projects;
+    private Set<Job> jobs;
 
-    public Employee() {
-        this.isFired = false;
-        this.projects = new HashSet<>();
-    }
+    public Employee() {}
 
-    public Employee(String firstName, String lastName, String passportId, boolean isFired, Set<Project> projects) {
+    public Employee(String firstName, String lastName, String passportId, boolean isFired, Set<Job> jobs) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.passportId = passportId;
         this.isFired = isFired;
-        this.projects = projects;
+        this.jobs = jobs;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getFirstName() {
@@ -78,11 +78,11 @@ public class Employee {
         isFired = true;
     }
 
-    public Set<Project> getProjects() {
-        return projects;
+    public Set<Job> getJobs() {
+        return jobs;
     }
 
-    public void setProjects(Set<Project> projects) {
-        this.projects = projects;
+    public void setJobs(Set<Job> jobs) {
+        this.jobs = jobs;
     }
 }
