@@ -32,6 +32,10 @@ public class ProjectServiceImpl implements ProjectService {
         this.employeeService = employeeService;
     }
 
+    boolean existsById(Long id) {
+        return repository.existsById(id);
+    }
+
     @Override
     public ProjectResponse getById(Long id) {
         Optional<Project> project = repository.findById(id);
