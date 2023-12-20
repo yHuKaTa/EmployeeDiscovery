@@ -1,18 +1,17 @@
 package com.sirma.exam.dtos;
 
-public class ProjectResponse {
-    private String projectName;
+import com.sirma.exam.utils.annotations.ValidDateFormat;
+
+public class EditProjectRequest {
+    @ValidDateFormat
     private String startDate;
+
+    @ValidDateFormat
     private String endDate;
 
-    public ProjectResponse(String projectName, String startDate, String endDate) {
-        this.projectName = projectName;
+    public EditProjectRequest(String projectName, String startDate, String endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
-    }
-
-    public String getProjectName() {
-        return projectName;
     }
 
     public String getStartDate() {

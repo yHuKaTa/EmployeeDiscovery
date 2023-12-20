@@ -26,7 +26,7 @@ public class Project {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE,pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "project")
     @JoinTable(name = "project_job", joinColumns = {
             @JoinColumn(name = "project_id", referencedColumnName = "id")
     }, inverseJoinColumns = {
@@ -41,6 +41,10 @@ public class Project {
         this.startDate = startDate;
         this.endDate = endDate;
         this.jobs = jobs;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getProjectName() {
