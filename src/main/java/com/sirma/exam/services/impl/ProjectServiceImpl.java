@@ -8,11 +8,13 @@ import com.sirma.exam.models.Project;
 import com.sirma.exam.repositories.ProjectRepository;
 import com.sirma.exam.services.EmployeeService;
 import com.sirma.exam.services.ProjectService;
+import com.sirma.exam.utils.DateValidator;
 import com.sirma.exam.utils.StringToDate;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -86,7 +88,10 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectResponse editProjectById(Long id, EditProjectRequest request, String passportId) {
         if (repository.existsById(id)) {
             Project project = getProjectById(id, passportId);
-            repository.editProject(StringToDate.toLocalDate(request.getStartDate()), StringToDate.toLocalDate(request.getEndDate()), id);
+            LocalDate editedDate = StringToDate.toLocalDate(request.getEndDate());
+            if (DateValidator.isEditedEndDateValid(editedDate, project.getStartDate(), project.getEndDate())) {
+                repository.editProject(editedDate, id);
+            } else throw new IllegalArgumentException("Provided new end date is invalid!");
             return ProjectConverter.toResponse(getProjectById(id, passportId));
         } else {
             return null;

@@ -16,8 +16,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Transactional
     @Modifying
-    @Query("update Project p set p.startDate = ?1, p.endDate = ?2 where p.id = ?3")
-    void editProject(LocalDate startDate, LocalDate endDate, Long id);
+    @Query("update Project p p.endDate = ?1 where p.id = ?2")
+    void editProject(LocalDate endDate, Long id);
 
 
 }
