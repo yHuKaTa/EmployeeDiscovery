@@ -25,7 +25,7 @@ public class ProjectController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<ProjectResponse> getProjectById(@PathVariable @Pattern(regexp = "[\\d]") @Valid Long id) {
+    public ResponseEntity<ProjectResponse> getProjectById(@PathVariable @Pattern(regexp = "[\\d]", message = "Project ID must contain only digits") @Valid Long id) {
         ProjectResponse response = service.getById(id);
         if (Objects.isNull(response)) {
             return ResponseEntity.notFound().build();
@@ -34,7 +34,7 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/get")
     public ResponseEntity<Project> getProjectById(@PathVariable @Pattern(regexp = "[\\d]", message = "Project ID must contain only digits") @Valid Long id,
             @RequestHeader(name = "passportId") @Pattern(regexp = "[\\d]{8,}", message = "Passport ID must contain at least 8 digits") @Valid String passportId) {
         Project project = service.getProjectById(id, passportId);
@@ -66,7 +66,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProject(@PathVariable @Pattern(regexp = "[\\d]") @Valid Long id) {
+    public ResponseEntity<?> deleteProject(@PathVariable @Pattern(regexp = "[\\d]", message = "Project ID must contain only digits") @Valid Long id) {
         if (service.deleteProjectById(id)) {
             return ResponseEntity.noContent().build();
         } else {
@@ -75,9 +75,9 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProjectResponse> editProjectById(@Pattern(regexp = "[\\d]") @Valid Long id,
+    public ResponseEntity<ProjectResponse> editProjectById(@Pattern(regexp = "[\\d]", message = "Project ID must contain only digits") @Valid Long id,
                                                              @RequestBody @Valid EditProjectRequest request,
-                                                           @RequestHeader(name = "passportId") @Pattern(regexp = "[\\d]{8,}", message = "Passport ID must contain at least 8 digits") @Valid String passportId) {
+                                                           @RequestHeader("passportId") @Pattern(regexp = "[\\d]{8,}", message = "Passport ID must contain at least 8 digits") @Valid String passportId) {
         ProjectResponse response = service.editProjectById(id, request, passportId);
         if (Objects.isNull(response)) {
             return ResponseEntity.badRequest().build();
