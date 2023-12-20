@@ -14,6 +14,9 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "description", nullable = false)
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
@@ -22,7 +25,7 @@ public class Job {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @Column(name = "start_date")
+    @Column(name = "start_date", nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
@@ -37,6 +40,14 @@ public class Job {
         this.project = project;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Project getProject() {
