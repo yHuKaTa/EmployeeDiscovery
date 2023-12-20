@@ -25,6 +25,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.repository = repository;
     }
 
+    boolean existsById(Long id) {
+        return repository.existsById(id);
+    }
+
     @Override
     public EmployeeResponse getById(Long id) {
         Optional<Employee> employee = repository.findById(id);
