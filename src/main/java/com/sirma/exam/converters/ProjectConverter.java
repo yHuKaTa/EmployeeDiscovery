@@ -16,8 +16,8 @@ public class ProjectConverter {
         if (DateValidator.isDatesValid(startDate, endDate)) {
             return new Project(
                     request.getProjectName(),
-                    StringToDate.toLocalDate(request.getStartDate()),
-                    StringToDate.toLocalDate(request.getEndDate()),
+                    startDate,
+                    endDate,
                     new HashSet<>());
         } else throw new IllegalArgumentException("Provide valid start and end dates!");
     }
