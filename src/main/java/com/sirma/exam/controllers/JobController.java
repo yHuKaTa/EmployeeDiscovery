@@ -1,17 +1,17 @@
 package com.sirma.exam.controllers;
 
+import com.sirma.exam.dtos.AddJobToEmployeeRequest;
 import com.sirma.exam.dtos.JobResponse;
 import com.sirma.exam.services.JobService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -30,6 +30,57 @@ public class JobController {
         JobResponse response = service.getById(id);
         if (Objects.isNull(response)) {
             return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @GetMapping("/employee/{id}")
+    public ResponseEntity<List<JobResponse>> getJobsByEmployeeId(@PathVariable @Pattern(regexp = "[\\d]", message = "Employee ID must contain only digits") @Valid Long id) {
+        List<JobResponse> responses = service.getJobsByEmployeeId(id);
+        if (Objects.isNull(responses) || responses.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(responses);
+        }
+    }
+
+    @GetMapping("/project/{id}")
+    public ResponseEntity<List<JobResponse>> getJobsByProjectId(@PathVariable @Pattern(regexp = "[\\d]", message = "Project ID must contain only digits") @Valid Long id) {
+        List<JobResponse> responses = service.getJobsByProjectId(id);
+        if (Objects.isNull(responses) || responses.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(responses);
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<JobResponse> saveNewJob(@RequestHeader("passportId") @Pattern(regexp = "[\\d]{8,}", message = "Passport ID must contain at least 8 digits") @Valid String passportId,
+                                                  @RequestBody @Valid AddJobToEmployeeRequest request) {
+        JobResponse response = service.saveNewJob(request, passportId);
+        if (Objects.isNull(response)) {
+            return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteJob(@PathVariable @Pattern(regexp = "[\\d]", message = "Project ID must contain only digits") @Valid Long id) {
+        if (service.deleteById(id)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<JobResponse> editJob(@PathVariable @Pattern(regexp = "[\\d]", message = "Project ID must contain only digits") @Valid Long id,
+                                               @NotBlank @Pattern(regexp = "[\\w\\p{Punct}]", message = "Description must contain alphanumeric text with punctuations.") @Valid String description) {
+        JobResponse response = service.editJobById(id, description);
+        if (Objects.isNull(response)) {
+            return ResponseEntity.badRequest().build();
         } else {
             return ResponseEntity.ok(response);
         }

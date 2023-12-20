@@ -11,10 +11,10 @@ public class AddJobToEmployeeRequest {
     @Pattern(regexp = "[\\w\\p{Punct}]", message = "Description must contain alphanumeric text with punctuations.")
     private String description;
     @Pattern(regexp = "[\\d]", message = "Employee ID must contain only digits")
-    private String employeeId;
+    private Long employeeId;
 
     @Pattern(regexp = "[\\d]", message = "Project ID must contains only digits")
-    private String projectId;
+    private Long projectId;
 
     @ValidDateFormat
     private String startDate;
@@ -22,7 +22,7 @@ public class AddJobToEmployeeRequest {
     @ValidDateFormat
     private String endDate;
 
-    public AddJobToEmployeeRequest(String description, String employeeId, String projectId, String startDate, String endDate) {
+    public AddJobToEmployeeRequest(String description, Long employeeId, Long projectId, String startDate, String endDate) {
         this.description = description;
         this.projectId = projectId;
         this.employeeId = employeeId;
@@ -34,11 +34,11 @@ public class AddJobToEmployeeRequest {
         return description;
     }
 
-    public String getEmployeeId() {
+    public Long getEmployeeId() {
         return employeeId;
     }
 
-    public String getProjectId() {
+    public Long getProjectId() {
         return projectId;
     }
 

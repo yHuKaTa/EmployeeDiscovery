@@ -11,7 +11,7 @@ public interface JobService {
     JobResponse getById(Long id);
     List<JobResponse> getJobsByEmployeeId(Long id);
     List<JobResponse> getJobsByProjectId(Long id);
-    JobResponse saveNewJob(AddJobToEmployeeRequest job);
+    JobResponse saveNewJob(AddJobToEmployeeRequest job, String passportId);
     boolean deleteById(Long id);
-    JobResponse editJobById(Long id);
+    JobResponse editJobById(Long id, String description);
 }
