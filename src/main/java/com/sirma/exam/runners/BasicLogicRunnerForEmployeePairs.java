@@ -15,11 +15,15 @@ import java.util.*;
 
 @Component
 public class BasicLogicRunnerForEmployeePairs implements CommandLineRunner {
-    @Autowired
     private ExamRepository repository;
 
     // EmployeeId, EmployeeId, ProjectId, Time
     private final Map<Long, Map<Long, Map<Long, Long>>> timeSpentTogether = new HashMap<>();
+
+    @Autowired
+    public BasicLogicRunnerForEmployeePairs(ExamRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public void run(String... args) throws Exception {

@@ -16,7 +16,6 @@ import java.util.*;
 
 @Component
 public class AdvanceLogicRunnerForEmployeePairs implements CommandLineRunner {
-    @Autowired
     private ExamRepository repository;
     // EmployeeId, EmployeeId, Time
     private final TripleMap<Long, Long, Long> pairTimes = new TripleMap<>();
@@ -24,6 +23,11 @@ public class AdvanceLogicRunnerForEmployeePairs implements CommandLineRunner {
     private final TripleMap<Long, Long, List<Long>> projectsPairing = new TripleMap<>();
     private final Set<Long> employeeIds = new HashSet<>();
     private final List<Exam> allRecords = repository.findAll();
+
+    @Autowired
+    public AdvanceLogicRunnerForEmployeePairs(ExamRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public void run(String... args) throws Exception {
