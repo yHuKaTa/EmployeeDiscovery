@@ -1,9 +1,6 @@
 package com.sirma.exam.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,6 +12,9 @@ import java.util.Objects;
 @Table(name = "Exam")
 public class Exam {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;
 
@@ -36,6 +36,10 @@ public class Exam {
         this.projectId = projectId;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getEmployeeId() {
