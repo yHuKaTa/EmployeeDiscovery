@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -22,7 +24,7 @@ public class AdvanceLogicRunnerForEmployeePairs implements CommandLineRunner {
     // EmployeeId, EmployeeId, ProjectId
     private final TripleMap<Long, Long, List<Long>> projectsPairing;
     private final Set<Long> employeeIds;
-    private final List<Exam> allRecords;
+    private List<Exam> allRecords;
 
     @Autowired
     public AdvanceLogicRunnerForEmployeePairs(ExamRepository repository) {
@@ -38,29 +40,33 @@ public class AdvanceLogicRunnerForEmployeePairs implements CommandLineRunner {
         saveTestJobs();
         Long[] twoEmployees = findEmployees();
         List<Long[]> projects = findProjects(twoEmployees);
-        System.out.println("Top team workers are: " + twoEmployees[0] + " and " + twoEmployees[1] + ". They work together for: " + twoEmployees[2] + " days.");
-        System.out.println("They work on projects:");
-        for (Long[] project : projects) {
-            System.out.println("Project ID: " + project[0] + " for time: " + project[1] + " days");
+        if (Objects.nonNull(twoEmployees) && Objects.nonNull(projects)) {
+            System.out.println("Top team workers are: " + twoEmployees[0] + " and " + twoEmployees[1] + ". They work together for: " + twoEmployees[2] + " days.");
+            System.out.println("They work on projects:");
+            for (Long[] project : projects) {
+                System.out.println("Project ID: " + project[0] + " for time: " + project[1] + " days");
+            }
         }
     }
 
     private Long[] findEmployees() {
-        allRecords.forEach(record -> {
-            employeeIds.add(record.getEmployeeId());
-            allRecords.forEach(otherRecord -> {
-                if (record != otherRecord && recordsOverlap(record, otherRecord)) {
-                    Long time = ChronoUnit.DAYS.between(otherRecord.getStartDate(), otherRecord.getEndDate());
-                    if (pairTimes.contains(record.getEmployeeId(), otherRecord.getEmployeeId())) {
-                        Long temp = pairTimes.get(record.getEmployeeId(), otherRecord.getEmployeeId()) + time;
-                        pairTimes.addValue(record.getEmployeeId(), otherRecord.getEmployeeId(), temp);
-                    } else {
-                        pairTimes.addValue(record.getEmployeeId(), otherRecord.getEmployeeId(), time);
+        if (Objects.nonNull(allRecords)) {
+            allRecords.forEach(record -> {
+                employeeIds.add(record.getEmployeeId());
+                allRecords.forEach(otherRecord -> {
+                    if (record != otherRecord && recordsOverlap(record, otherRecord)) {
+                        Long time = ChronoUnit.DAYS.between(otherRecord.getStartDate(), otherRecord.getEndDate());
+                        if (pairTimes.contains(record.getEmployeeId(), otherRecord.getEmployeeId())) {
+                            Long temp = pairTimes.get(record.getEmployeeId(), otherRecord.getEmployeeId()) + time;
+                            pairTimes.addValue(record.getEmployeeId(), otherRecord.getEmployeeId(), temp);
+                        } else {
+                            pairTimes.addValue(record.getEmployeeId(), otherRecord.getEmployeeId(), time);
+                        }
                     }
-                }
+                });
             });
-        });
-        return findMaxTimeTogether();
+            return findMaxTimeTogether();
+        } else return null;
     }
 
     private boolean recordsOverlap(Exam record1, Exam record2) {
@@ -87,60 +93,63 @@ public class AdvanceLogicRunnerForEmployeePairs implements CommandLineRunner {
         long maxTimeTogether = 0L;
         Long employee1 = 0L;
         Long employee2 = 0L;
-
-        for (Long empId : employeeIds) {
-            for (Long secondEmpl : employeeIds) {
-                Long currentTime = pairTimes.get(empId, secondEmpl);
-                if (maxTimeTogether < currentTime) {
-                    maxTimeTogether = currentTime;
-                    employee1 = empId;
-                    employee2 = secondEmpl;
+        if (Objects.nonNull(employeeIds)) {
+            for (Long empId : employeeIds) {
+                for (Long secondEmpl : employeeIds) {
+                    Long currentTime = pairTimes.get(empId, secondEmpl);
+                    if (maxTimeTogether < currentTime) {
+                        maxTimeTogether = currentTime;
+                        employee1 = empId;
+                        employee2 = secondEmpl;
+                    }
                 }
             }
-        }
-        return new Long[]{employee1, employee2, maxTimeTogether};
+            return new Long[]{employee1, employee2, maxTimeTogether};
+        } else return null;
     }
 
     private List<Long[]> findProjects(Long[] employeeIds) {
         if (pairTimes.isEmpty() || employeeIds.length == 0) {
             employeeIds = findEmployees();
         }
+        if (Objects.nonNull(allRecords) && !allRecords.isEmpty() && Objects.nonNull(employeeIds)) {
+            List<Long[]> projectTimeSpent = new ArrayList<>();
+            Long employee1 = employeeIds[0];
+            Long employee2 = employeeIds[1];
 
-        List<Long[]> projectTimeSpent = new ArrayList<>();
-        Long employee1 = employeeIds[0];
-        Long employee2 = employeeIds[1];
+            allRecords.forEach(record -> {
+                allRecords.forEach(otherRecord -> {
+                    if (record != otherRecord && recordsOverlap(record, otherRecord)) {
+                        if (!projectsPairing.contains(record.getEmployeeId(), otherRecord.getEmployeeId())) {
+                            List<Long> projects = new ArrayList<>();
+                            projects.add(record.getProjectId());
+                            projectsPairing.addValue(record.getEmployeeId(), otherRecord.getEmployeeId(), projects);
+                        } else {
+                            projectsPairing.get(record.getEmployeeId(), otherRecord.getEmployeeId()).add(record.getProjectId());
+                        }
+                    }
+                });
+            });
 
-        allRecords.forEach(record -> {
-            allRecords.forEach(otherRecord -> {
-                if (record != otherRecord && recordsOverlap(record, otherRecord)) {
-                    if (!projectsPairing.contains(record.getEmployeeId(), otherRecord.getEmployeeId())) {
-                        List<Long> projects = new ArrayList<>();
-                        projects.add(record.getProjectId());
-                        projectsPairing.addValue(record.getEmployeeId(), otherRecord.getEmployeeId(), projects);
-                    } else {
-                        projectsPairing.get(record.getEmployeeId(),otherRecord.getEmployeeId()).add(record.getProjectId());
+            Map<Long, Long> timeOnProjects = new HashMap<>();
+            for (Long projectId : projectsPairing.get(employee1, employee2)) {
+                for (Exam record : allRecords) {
+                    if (record.getProjectId().equals(projectId) && record.getEmployeeId().equals(employee2)) {
+                        timeOnProjects.put(projectId, ChronoUnit.DAYS.between(record.getStartDate(), record.getEndDate()));
                     }
                 }
-            });
-        });
-
-        Map<Long, Long> timeOnProjects = new HashMap<>();
-        for (Long projectId : projectsPairing.get(employee1, employee2)) {
-            for (Exam record : allRecords) {
-                if (record.getProjectId().equals(projectId) && record.getEmployeeId().equals(employee2)) {
-                    timeOnProjects.put(projectId, ChronoUnit.DAYS.between(record.getStartDate(),record.getEndDate()));
-                }
             }
-        }
 
-        for (Map.Entry<Long, Long> projects : timeOnProjects.entrySet()) {
-            projectTimeSpent.add(new Long[]{projects.getKey(), projects.getValue()});
-        }
-        return projectTimeSpent;
+            for (Map.Entry<Long, Long> projects : timeOnProjects.entrySet()) {
+                projectTimeSpent.add(new Long[]{projects.getKey(), projects.getValue()});
+            }
+            return projectTimeSpent;
+        } else return null;
     }
 
     private void saveTestJobs() {
-        List<String[]> info = ReadFromCsv.read("import.csv");
+        Path path = Paths.get("input_data.csv");
+        List<String[]> info = ReadFromCsv.read(path.toAbsolutePath().toString());
         if (Objects.nonNull(info)) {
             for (String[] line : info) {
                 Long empId = null;

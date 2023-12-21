@@ -26,6 +26,7 @@ public class ReadFromCsv {
             }
         } catch (IOException e) {
             System.err.println("Could not read from " + location);
+            System.err.println(e.getMessage());
         }
         return values;
     }

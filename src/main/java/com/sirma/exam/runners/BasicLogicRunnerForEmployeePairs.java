@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -31,90 +33,96 @@ public class BasicLogicRunnerForEmployeePairs implements CommandLineRunner {
         saveTestJobs();
         Long[] twoEmployees = findEmployees();
         List<Long[]> projects = findProjects(twoEmployees);
-        System.out.println("Top team workers are: " + twoEmployees[0] + " and " + twoEmployees[1] + ". They work together for: " + twoEmployees[2] + " days.");
-        System.out.println("They work on projects:");
-        for (Long[] project : projects) {
-            System.out.println("Project ID: " + project[0] + " for time: " + project[1] + " days");
+        if (Objects.nonNull(twoEmployees) && Objects.nonNull(projects)) {
+            System.out.println("Top team workers are: " + twoEmployees[0] + " and " + twoEmployees[1] + ". They work together for: " + twoEmployees[2] + " days.");
+            System.out.println("They work on projects:");
+            for (Long[] project : projects) {
+                System.out.println("Project ID: " + project[0] + " for time: " + project[1] + " days");
+            }
         }
     }
 
     private Long[] findEmployees() {
         List<Exam> allRecords = repository.findAll();
+        if (Objects.nonNull(allRecords) && !allRecords.isEmpty()) {
+            for (Exam record : allRecords) {
+                for (Exam otherRecord : allRecords) {
+                    if (record.getProjectId().equals(otherRecord.getProjectId()) &&
+                            (record.getStartDate().isEqual(otherRecord.getStartDate()) || record.getStartDate().isBefore(otherRecord.getStartDate())) &&
+                            (record.getEndDate().isEqual(otherRecord.getEndDate()) || record.getEndDate().isAfter(otherRecord.getEndDate()))) {
+                        if (timeSpentTogether.containsKey(record.getEmployeeId())) {
+                            if (timeSpentTogether.get(record.getEmployeeId()).containsKey(otherRecord.getEmployeeId())) {
+                                if (timeSpentTogether.get(record.getEmployeeId()).get(otherRecord.getEmployeeId()).containsKey(record.getProjectId())) {
 
-        for (Exam record : allRecords) {
-            for (Exam otherRecord : allRecords) {
-                if (record.getProjectId().equals(otherRecord.getProjectId()) &&
-                        (record.getStartDate().isEqual(otherRecord.getStartDate()) || record.getStartDate().isBefore(otherRecord.getStartDate())) &&
-                        (record.getEndDate().isEqual(otherRecord.getEndDate()) || record.getEndDate().isAfter(otherRecord.getEndDate()))) {
-                    if (timeSpentTogether.containsKey(record.getEmployeeId())) {
-                        if (timeSpentTogether.get(record.getEmployeeId()).containsKey(otherRecord.getEmployeeId())) {
-                            if (timeSpentTogether.get(record.getEmployeeId()).get(otherRecord.getEmployeeId()).containsKey(record.getProjectId())) {
-
-                                timeSpentTogether.get(record.getEmployeeId()).get(otherRecord.getEmployeeId()).put(record.getProjectId(),
-                                        timeSpentTogether.get(record.getEmployeeId()).get(otherRecord.getEmployeeId()).get(record.getProjectId()) +
-                                                ChronoUnit.DAYS.between(otherRecord.getStartDate(), otherRecord.getEndDate()));
+                                    timeSpentTogether.get(record.getEmployeeId()).get(otherRecord.getEmployeeId()).put(record.getProjectId(),
+                                            timeSpentTogether.get(record.getEmployeeId()).get(otherRecord.getEmployeeId()).get(record.getProjectId()) +
+                                                    ChronoUnit.DAYS.between(otherRecord.getStartDate(), otherRecord.getEndDate()));
+                                } else {
+                                    timeSpentTogether.get(record.getEmployeeId()).get(otherRecord.getEmployeeId()).put(record.getProjectId(),
+                                            ChronoUnit.DAYS.between(otherRecord.getStartDate(), otherRecord.getEndDate()));
+                                }
                             } else {
+                                timeSpentTogether.get(record.getEmployeeId()).put(otherRecord.getEmployeeId(), new HashMap<>());
                                 timeSpentTogether.get(record.getEmployeeId()).get(otherRecord.getEmployeeId()).put(record.getProjectId(),
                                         ChronoUnit.DAYS.between(otherRecord.getStartDate(), otherRecord.getEndDate()));
+
                             }
                         } else {
-                            timeSpentTogether.get(record.getEmployeeId()).put(otherRecord.getEmployeeId(), new HashMap<>());
-                            timeSpentTogether.get(record.getEmployeeId()).get(otherRecord.getEmployeeId()).put(record.getProjectId(),
-                                    ChronoUnit.DAYS.between(otherRecord.getStartDate(), otherRecord.getEndDate()));
-
+                            timeSpentTogether.put(record.getEmployeeId(), new HashMap<>());
                         }
-                    } else {
-                        timeSpentTogether.put(record.getEmployeeId(), new HashMap<>());
                     }
                 }
             }
-        }
 
-        Long maxTimeTogether = 0L;
-        Long employee1 = 0L;
-        Long employee2 = 0L;
+            Long maxTimeTogether = 0L;
+            Long employee1 = 0L;
+            Long employee2 = 0L;
 
-        for (Map.Entry<Long, Map<Long, Map<Long, Long>>> entry : timeSpentTogether.entrySet()) {
-            Long currentEmployee1 = entry.getKey();
-            Map<Long, Map<Long, Long>> innerMap = entry.getValue();
+            for (Map.Entry<Long, Map<Long, Map<Long, Long>>> entry : timeSpentTogether.entrySet()) {
+                Long currentEmployee1 = entry.getKey();
+                Map<Long, Map<Long, Long>> innerMap = entry.getValue();
 
-            for (Map.Entry<Long, Map<Long, Long>> innerEntry : innerMap.entrySet()) {
-                Long currentEmployee2 = innerEntry.getKey();
-                Map<Long, Long> projectMap = innerEntry.getValue();
+                for (Map.Entry<Long, Map<Long, Long>> innerEntry : innerMap.entrySet()) {
+                    Long currentEmployee2 = innerEntry.getKey();
+                    Map<Long, Long> projectMap = innerEntry.getValue();
 
-                for (Map.Entry<Long, Long> projectEntry : projectMap.entrySet()) {
-                    Long timeTogether = projectEntry.getValue();
+                    for (Map.Entry<Long, Long> projectEntry : projectMap.entrySet()) {
+                        Long timeTogether = projectEntry.getValue();
 
-                    if (timeTogether > maxTimeTogether) {
-                        maxTimeTogether = timeTogether;
-                        employee1 = currentEmployee1;
-                        employee2 = currentEmployee2;
+                        if (timeTogether > maxTimeTogether) {
+                            maxTimeTogether = timeTogether;
+                            employee1 = currentEmployee1;
+                            employee2 = currentEmployee2;
+                        }
                     }
                 }
             }
-        }
 
-        return new Long[]{employee1, employee2, maxTimeTogether};
+            return new Long[]{employee1, employee2, maxTimeTogether};
+        } else return null;
     }
 
     private List<Long[]> findProjects(Long[] employeeIds) {
         if (timeSpentTogether.isEmpty() || employeeIds.length == 0) {
             employeeIds = findEmployees();
         }
-        List<Long[]> projectTimeSpent = new ArrayList<>();
-        Long employee1 = employeeIds[0];
-        Long employee2 = employeeIds[1];
+        if (Objects.nonNull(employeeIds) && !timeSpentTogether.isEmpty()) {
+            List<Long[]> projectTimeSpent = new ArrayList<>();
+            Long employee1 = employeeIds[0];
+            Long employee2 = employeeIds[1];
 
-        Map<Long, Long> otherMap = timeSpentTogether.get(employee1).get(employee2);
+            Map<Long, Long> otherMap = timeSpentTogether.get(employee1).get(employee2);
 
-        for (Map.Entry<Long, Long> projects : otherMap.entrySet()) {
-            projectTimeSpent.add(new Long[]{projects.getKey(), projects.getValue()});
-        }
-        return projectTimeSpent;
+            for (Map.Entry<Long, Long> projects : otherMap.entrySet()) {
+                projectTimeSpent.add(new Long[]{projects.getKey(), projects.getValue()});
+            }
+            return projectTimeSpent;
+        } else return null;
     }
 
     private void saveTestJobs() {
-        List<String[]> info = ReadFromCsv.read("import.csv");
+        Path path = Paths.get("input_data.csv");
+        List<String[]> info = ReadFromCsv.read(path.toAbsolutePath().toString());
         if (Objects.nonNull(info)) {
             for (String[] line : info) {
                 Long empId = null;
