@@ -17,11 +17,10 @@ public class ReadFromCsv {
      * @return {@link List} A list of strings arrays or null if the file could not be read
      */
     public static List<String[]> read(String location) {
-        List<String[]> values = null;
+        List<String[]> values = new LinkedList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(location))) {
             String line;
             while (Objects.nonNull(line = reader.readLine())) {
-                values = new LinkedList<>();
                 values.add(line.trim().split("\s*,\s*"));
             }
         } catch (IOException e) {

@@ -5,7 +5,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 public class FireEmployeeRequest {
-    @Pattern(regexp = "[\\d]", message = "Employee ID must contain only digits")
+    @Pattern(regexp = "[\\d]+", message = "Employee ID must contain only digits")
     private Long id;
 
     @Pattern(regexp = "[\\d]{8,}", message = "Passport ID must contain at least 8 numeric symbols")

@@ -29,7 +29,7 @@ public class EmployeeController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable @Pattern(regexp = "[\\d]", message = "Employee ID must contain only digits!") @Valid Long id) {
+    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable @Pattern(regexp = "[\\d]+", message = "Employee ID must contain only digits!") @Valid Long id) {
         EmployeeResponse response = service.getById(id);
         if (Objects.isNull(response)) {
             return ResponseEntity.notFound().build();
@@ -69,7 +69,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/{id}/fire")
-    public ResponseEntity<EmployeeResponse> fireEmployee(@PathVariable @Pattern(regexp = "[\\d]", message = "Employee ID must contain only digits!") @Valid Long id,
+    public ResponseEntity<EmployeeResponse> fireEmployee(@PathVariable @Pattern(regexp = "[\\d]+", message = "Employee ID must contain only digits!") @Valid Long id,
                                                          @RequestBody @Valid FireEmployeeRequest request) {
         EmployeeResponse response = service.fireEmployee(id, request);
         if (Objects.isNull(response)) {
@@ -80,7 +80,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEmployee(@PathVariable @Pattern(regexp = "[\\d]", message = "Employee ID must contain only digits!") @Valid Long id) {
+    public ResponseEntity<?> deleteEmployee(@PathVariable @Pattern(regexp = "[\\d]+", message = "Employee ID must contain only digits!") @Valid Long id) {
         if (service.deleteEmployeeById(id)) {
             return ResponseEntity.noContent().build();
         } else {

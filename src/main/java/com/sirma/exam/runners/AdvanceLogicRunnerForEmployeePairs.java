@@ -2,10 +2,7 @@ package com.sirma.exam.runners;
 
 import com.sirma.exam.models.Exam;
 import com.sirma.exam.repositories.ExamRepository;
-import com.sirma.exam.utils.ReadFromCsv;
-import com.sirma.exam.utils.ReadLabelledMonths;
-import com.sirma.exam.utils.StringToDate;
-import com.sirma.exam.utils.TripleMap;
+import com.sirma.exam.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -151,6 +148,7 @@ public class AdvanceLogicRunnerForEmployeePairs implements CommandLineRunner {
         Path path = Paths.get("input_data.csv");
         List<String[]> info = ReadFromCsv.read(path.toAbsolutePath().toString());
         if (Objects.nonNull(info)) {
+            String regex = RegExTemplate.getRegex();
             for (String[] line : info) {
                 Long empId = null;
                 Long projId = null;
@@ -167,10 +165,10 @@ public class AdvanceLogicRunnerForEmployeePairs implements CommandLineRunner {
                 if (projectId.matches("[\\d]")) {
                     projId = Long.parseLong(projectId);
                 }
-                if (startDate.matches(getRegex())) {
+                if (startDate.matches(regex)) {
                     sDate = StringToDate.toLocalDate(startDate);
                 }
-                if (!endDate.equalsIgnoreCase("null") && endDate.matches(getRegex())) {
+                if (!endDate.equalsIgnoreCase("null") && endDate.matches(regex)) {
                     eDate = StringToDate.toLocalDate(endDate);
                 }
                 if (Objects.nonNull(empId) && Objects.nonNull(projId) && Objects.nonNull(sDate)) {
@@ -178,34 +176,5 @@ public class AdvanceLogicRunnerForEmployeePairs implements CommandLineRunner {
                 }
             }
         }
-    }
-
-    private static String getRegex() {
-        StringBuilder builder = new StringBuilder();
-        String delemiter = "((\\s)|(.)|(-)|(/)|(,)|(\\\\))";
-
-        builder.append("(((3[01])|([12][0-9])|((0)?[1-9]))");
-        builder.append(delemiter);
-        builder.append("(((1[1,2])|((0)?[1-9]))|(");
-        builder.append(ReadLabelledMonths.monthsToRegex() + "))");
-        builder.append(delemiter);
-        builder.append("(2[0-9]{3})");
-        builder.append("(((\\s)?г(.)?)?))|");
-
-        builder.append("(" + ReadLabelledMonths.monthsToRegex() + ")");
-        builder.append(delemiter);
-        builder.append("((3[01])|([12][0-9])|((0)?[1-9]))");
-        builder.append(delemiter);
-        builder.append("(2[0-9]{3})");
-        builder.append("(((\\s)?г(.)?)?))|");
-
-        builder.append("((2[0-9]{3})");
-        builder.append(delemiter);
-        builder.append("(((1[1,2])|((0)?[1-9]))|(");
-        builder.append(ReadLabelledMonths.monthsToRegex() + "))");
-        builder.append(delemiter);
-        builder.append("((3[01])|([12][0-9])|((0)?[1-9])))");
-
-        return builder.toString();
     }
 }

@@ -19,7 +19,7 @@ public class StringToDate {
     public static LocalDate toLocalDate(String date) {
         LocalDate generatedDate = null;
         int month = 0;
-        List<String> rawData = Arrays.stream(date.trim().split("(\\s)|(.)|(-)|(/)|(,)|(\\\\)")).toList();
+        List<String> rawData = Arrays.stream(date.trim().split("[\\s\\.\\-\\/,\\\\]")).toList();
         Iterator<String> iterator = rawData.iterator();
         while (iterator.hasNext()) {
             String searched = iterator.next();
