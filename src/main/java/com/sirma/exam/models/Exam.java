@@ -18,14 +18,14 @@ public class Exam {
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;
 
-    @Column(name = "employee_id", nullable = false)
+    @Column(name = "project_id", nullable = false)
     private Long projectId;
 
-    @Column(name = "employee_id", nullable = false)
+    @Column(name = "start_date", nullable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "yyyy-MM-yy")
     private LocalDate startDate;
 
-    @Column(name = "employee_id")
+    @Column(name = "end_date")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "yyyy-MM-yy")
     private LocalDate endDate;
 
