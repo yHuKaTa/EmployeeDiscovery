@@ -27,11 +27,6 @@ public class Project {
     private LocalDate endDate;
 
     @ManyToMany(mappedBy = "project")
-    @JoinTable(name = "project_job", joinColumns = {
-            @JoinColumn(name = "project_id", referencedColumnName = "id")
-    }, inverseJoinColumns = {
-            @JoinColumn(name = "job_id", referencedColumnName = "id")
-    })
     private Set<Job> jobs;
 
     public Project() {}
