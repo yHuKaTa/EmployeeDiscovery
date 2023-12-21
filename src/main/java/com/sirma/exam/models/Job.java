@@ -18,11 +18,9 @@ public class Job {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "employee_id")
     private Employee employee;
 
     @ManyToOne
-    @JoinColumn(name = "project_id")
     private Project project;
 
     @Column(name = "start_date", nullable = false)
