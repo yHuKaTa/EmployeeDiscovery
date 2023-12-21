@@ -18,11 +18,12 @@ public class BasicLogicRunnerForEmployeePairs implements CommandLineRunner {
     private ExamRepository repository;
 
     // EmployeeId, EmployeeId, ProjectId, Time
-    private final Map<Long, Map<Long, Map<Long, Long>>> timeSpentTogether = new HashMap<>();
+    private final Map<Long, Map<Long, Map<Long, Long>>> timeSpentTogether;
 
     @Autowired
     public BasicLogicRunnerForEmployeePairs(ExamRepository repository) {
         this.repository = repository;
+        this.timeSpentTogether = new HashMap<>();
     }
 
     @Override
