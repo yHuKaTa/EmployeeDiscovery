@@ -25,11 +25,6 @@ public class Employee {
     private boolean isFired;
 
     @ManyToMany(mappedBy = "employee")
-    @JoinTable(name = "employee_job", joinColumns = {
-            @JoinColumn(name = "employee_id", referencedColumnName = "id")
-            }, inverseJoinColumns = {
-                    @JoinColumn(name = "job_id", referencedColumnName = "id")
-    })
     private Set<Job> jobs;
 
     public Employee() {}
