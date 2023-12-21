@@ -11,9 +11,11 @@ import com.sirma.exam.services.EmployeeService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Service
 public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository repository;
 

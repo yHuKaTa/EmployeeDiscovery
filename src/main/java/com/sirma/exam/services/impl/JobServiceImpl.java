@@ -19,12 +19,14 @@ import com.sirma.exam.utils.DateValidator;
 import com.sirma.exam.utils.StringToDate;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class JobServiceImpl implements JobService {
     private EmployeeService employeeService;
     private ProjectService projectService;

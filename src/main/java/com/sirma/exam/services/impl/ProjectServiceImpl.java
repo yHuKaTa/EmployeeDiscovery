@@ -13,11 +13,12 @@ import com.sirma.exam.utils.StringToDate;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
 
-
+@Service
 public class ProjectServiceImpl implements ProjectService {
     private ProjectRepository repository;
 

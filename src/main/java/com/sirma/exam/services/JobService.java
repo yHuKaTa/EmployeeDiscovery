@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface JobService {
     JobResponse getById(Long id);
     List<JobResponse> getJobsByEmployeeId(Long id);
