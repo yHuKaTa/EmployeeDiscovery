@@ -18,15 +18,19 @@ import java.util.*;
 public class AdvanceLogicRunnerForEmployeePairs implements CommandLineRunner {
     private ExamRepository repository;
     // EmployeeId, EmployeeId, Time
-    private final TripleMap<Long, Long, Long> pairTimes = new TripleMap<>();
+    private final TripleMap<Long, Long, Long> pairTimes;
     // EmployeeId, EmployeeId, ProjectId
-    private final TripleMap<Long, Long, List<Long>> projectsPairing = new TripleMap<>();
-    private final Set<Long> employeeIds = new HashSet<>();
-    private final List<Exam> allRecords = repository.findAll();
+    private final TripleMap<Long, Long, List<Long>> projectsPairing;
+    private final Set<Long> employeeIds;
+    private final List<Exam> allRecords;
 
     @Autowired
     public AdvanceLogicRunnerForEmployeePairs(ExamRepository repository) {
         this.repository = repository;
+        this.pairTimes = new TripleMap<>();
+        this.projectsPairing = new TripleMap<>();
+        this.employeeIds = new HashSet<>();
+        this.allRecords = repository.findAll();
     }
 
     @Override
