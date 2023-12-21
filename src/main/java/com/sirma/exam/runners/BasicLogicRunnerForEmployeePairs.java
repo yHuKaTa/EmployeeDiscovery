@@ -115,30 +115,32 @@ public class BasicLogicRunnerForEmployeePairs implements CommandLineRunner {
 
     private void saveTestJobs() {
         List<String[]> info = ReadFromCsv.read("import.csv");
-        for (String[] line : info) {
-            Long empId = null;
-            Long projId = null;
-            LocalDate sDate = null;
-            LocalDate eDate = null;
-            String employeeId = line[0];
-            String projectId = line[1];
-            String startDate = line[2];
-            String endDate = line[3];
+        if (Objects.nonNull(info)) {
+            for (String[] line : info) {
+                Long empId = null;
+                Long projId = null;
+                LocalDate sDate = null;
+                LocalDate eDate = null;
+                String employeeId = line[0];
+                String projectId = line[1];
+                String startDate = line[2];
+                String endDate = line[3];
 
-            if (employeeId.matches("[\\d]")) {
-                empId = Long.parseLong(employeeId);
-            }
-            if (projectId.matches("[\\d]")) {
-                projId = Long.parseLong(projectId);
-            }
-            if (startDate.matches(getRegex())) {
-                sDate = StringToDate.toLocalDate(startDate);
-            }
-            if (!endDate.equalsIgnoreCase("null") && endDate.matches(getRegex())) {
-                eDate = StringToDate.toLocalDate(endDate);
-            }
-            if (Objects.nonNull(empId) && Objects.nonNull(projId) && Objects.nonNull(sDate)) {
-                repository.save(new Exam(empId, projId, sDate, eDate));
+                if (employeeId.matches("[\\d]")) {
+                    empId = Long.parseLong(employeeId);
+                }
+                if (projectId.matches("[\\d]")) {
+                    projId = Long.parseLong(projectId);
+                }
+                if (startDate.matches(getRegex())) {
+                    sDate = StringToDate.toLocalDate(startDate);
+                }
+                if (!endDate.equalsIgnoreCase("null") && endDate.matches(getRegex())) {
+                    eDate = StringToDate.toLocalDate(endDate);
+                }
+                if (Objects.nonNull(empId) && Objects.nonNull(projId) && Objects.nonNull(sDate)) {
+                    repository.save(new Exam(empId, projId, sDate, eDate));
+                }
             }
         }
     }
