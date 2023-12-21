@@ -1,5 +1,7 @@
 package com.sirma.exam.utils;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +34,8 @@ public class ReadLabelledMonths {
      */
     public static String monthsToRegex() {
         StringBuilder buffer = new StringBuilder();
-        List<String[]> val = ReadFromCsv.read("months.csv");
+        Path path = Paths.get("months.csv");
+        List<String[]> val = ReadFromCsv.read(path.toAbsolutePath().toString());
         if (Objects.nonNull(val) && !val.isEmpty()) {
             String last = val.getLast()[val.getLast().length-1];
             for (String[] line : val) {
