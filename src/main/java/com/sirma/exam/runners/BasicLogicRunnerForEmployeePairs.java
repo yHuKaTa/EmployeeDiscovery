@@ -7,11 +7,13 @@ import com.sirma.exam.utils.ReadLabelledMonths;
 import com.sirma.exam.utils.StringToDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+@Component
 public class BasicLogicRunnerForEmployeePairs implements CommandLineRunner {
     @Autowired
     private ExamRepository repository;
