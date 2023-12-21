@@ -24,7 +24,7 @@ public class Employee {
     @Column(name = "is_fired")
     private boolean isFired;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "employee")
     @JoinTable(name = "employee_job", joinColumns = {
             @JoinColumn(name = "employee_id", referencedColumnName = "id")
             }, inverseJoinColumns = {
