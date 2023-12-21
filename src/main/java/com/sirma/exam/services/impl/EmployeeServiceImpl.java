@@ -12,10 +12,7 @@ import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository repository;
@@ -27,6 +24,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     boolean existsById(Long id) {
         return repository.existsById(id);
+    }
+
+    Set<Employee> employees() {
+        return Set.copyOf(repository.findAll());
     }
 
     @Override

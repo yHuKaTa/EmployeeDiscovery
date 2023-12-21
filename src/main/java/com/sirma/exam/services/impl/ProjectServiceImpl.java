@@ -15,10 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 public class ProjectServiceImpl implements ProjectService {
@@ -34,6 +31,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     boolean existsById(Long id) {
         return repository.existsById(id);
+    }
+
+    Set<Project> projects() {
+        return Set.copyOf(repository.findAll());
     }
 
     @Override

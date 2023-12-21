@@ -1,6 +1,7 @@
 package com.sirma.exam.controllers;
 
 import com.sirma.exam.dtos.AddJobToEmployeeRequest;
+import com.sirma.exam.dtos.EmployeeResponse;
 import com.sirma.exam.dtos.JobResponse;
 import com.sirma.exam.services.JobService;
 import jakarta.validation.Valid;
@@ -18,11 +19,31 @@ import java.util.Objects;
 @RequestMapping("/jobs")
 @Validated
 public class JobController {
-    private JobService service;
+    private final JobService service;
 
     @Autowired
     public JobController(JobService service) {
         this.service = service;
+    }
+
+    @GetMapping(path = "/topEmployees")
+    public ResponseEntity<List<EmployeeResponse>> getTopEmployees() {
+        List<EmployeeResponse> response = service.findPairOfEmployee();
+        if (Objects.isNull(response) || response.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @GetMapping(path = "/topEmployees/jobs")
+    public ResponseEntity<List<JobResponse>> getJobsOfTopEmployees() {
+        List<JobResponse> responses = service.findAllProjectsForEmployees();
+        if (Objects.isNull(responses) || responses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(responses);
+        }
     }
 
     @GetMapping(path = "/{id}")

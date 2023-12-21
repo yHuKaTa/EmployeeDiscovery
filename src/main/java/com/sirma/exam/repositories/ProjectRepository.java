@@ -1,5 +1,6 @@
 package com.sirma.exam.repositories;
 
+import com.sirma.exam.models.Employee;
 import com.sirma.exam.models.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
@@ -18,6 +20,9 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Modifying
     @Query("update Project p p.endDate = ?1 where p.id = ?2")
     void editProject(LocalDate endDate, Long id);
+
+    @Query("select p from Project p inner join p.jobs jobs where jobs.employee = ?1 order by ((p.jobs.endDate)-(p.jobs.startDate)) DESC")
+    Set<Project> findByEmployeeOrderByDateDesc(Employee employee);
 
 
 }

@@ -1,6 +1,8 @@
 package com.sirma.exam.repositories;
 
+import com.sirma.exam.models.Employee;
 import com.sirma.exam.models.Job;
+import com.sirma.exam.models.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +23,12 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Modifying
     @Query("update Job j set j.description = ?1 where j.id = ?2")
     void updateDescriptionById(String description, Long id);
+
+    @Query("select j from Job j where j.employee = ?1 order by (j.endDate - j.startDate) DESC")
+    List<Job> findByEmployeeOrderByDateDesc(Employee employee);
+
+    @Query("select j from Job j where j.project = ?1 order by (j.endDate-j.startDate) DESC")
+    List<Job> findByProjectOrderByDateDesc(Project project);
 
 
 }

@@ -1,13 +1,16 @@
 package com.sirma.exam.repositories;
 
 import com.sirma.exam.models.Employee;
+import com.sirma.exam.models.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
@@ -25,6 +28,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Modifying
     @Query("update Employee e set e.firstName = ?1, e.lastName = ?2 where e.passportId = ?3")
     void editEmployee(String firstName, String lastName, String passportId);
+
+    @Query("select e from Employee e inner join e.jobs jobs where jobs.project = ?1 order by ((e.jobs.endDate)-(e.jobs.endDate)) DESC")
+    Set<Employee> findByProjectOrderByDateDesc(Project project);
 
 
 }
