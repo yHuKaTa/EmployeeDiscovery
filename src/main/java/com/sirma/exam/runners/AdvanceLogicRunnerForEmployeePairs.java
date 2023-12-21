@@ -21,7 +21,6 @@ public class AdvanceLogicRunnerForEmployeePairs implements CommandLineRunner {
     // EmployeeId, EmployeeId, ProjectId
     private final TripleMap<Long, Long, List<Long>> projectsPairing = new TripleMap<>();
     private final Set<Long> employeeIds = new HashSet<>();
-    private final Set<Long> projectIds = new HashSet<>();
     private final List<Exam> allRecords = repository.findAll();
 
     @Override
@@ -39,7 +38,6 @@ public class AdvanceLogicRunnerForEmployeePairs implements CommandLineRunner {
     private Long[] findEmployees() {
         allRecords.forEach(record -> {
             employeeIds.add(record.getEmployeeId());
-            projectIds.add(record.getProjectId());
             allRecords.forEach(otherRecord -> {
                 if (record != otherRecord && recordsOverlap(record, otherRecord)) {
                     Long time = ChronoUnit.DAYS.between(otherRecord.getStartDate(), otherRecord.getEndDate());
