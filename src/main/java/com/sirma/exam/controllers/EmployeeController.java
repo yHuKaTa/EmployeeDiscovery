@@ -8,6 +8,7 @@ import com.sirma.exam.models.Employee;
 import com.sirma.exam.services.EmployeeService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class EmployeeController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable @Pattern(regexp = "[\\d]+", message = "Employee ID must contain only digits!") @Valid Long id) {
+    public ResponseEntity<EmployeeResponse> getEmployeeById(@PathVariable @Digits(integer = 19, fraction = 0, message = "Employee ID must contain only digits!") @Valid Long id) {
         EmployeeResponse response = service.getById(id);
         if (Objects.isNull(response)) {
             return ResponseEntity.notFound().build();
@@ -69,7 +70,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/{id}/fire")
-    public ResponseEntity<EmployeeResponse> fireEmployee(@PathVariable @Pattern(regexp = "[\\d]+", message = "Employee ID must contain only digits!") @Valid Long id,
+    public ResponseEntity<EmployeeResponse> fireEmployee(@PathVariable @Digits(integer = 19, fraction = 0, message = "Employee ID must contain only digits!") @Valid Long id,
                                                          @RequestBody @Valid FireEmployeeRequest request) {
         EmployeeResponse response = service.fireEmployee(id, request);
         if (Objects.isNull(response)) {
@@ -80,7 +81,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEmployee(@PathVariable @Pattern(regexp = "[\\d]+", message = "Employee ID must contain only digits!") @Valid Long id) {
+    public ResponseEntity<?> deleteEmployee(@PathVariable @Digits(integer = 19, fraction = 0, message = "Employee ID must contain only digits!") @Valid Long id) {
         if (service.deleteEmployeeById(id)) {
             return ResponseEntity.noContent().build();
         } else {
