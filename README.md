@@ -2,7 +2,7 @@
 
 ## Description
 
-`Employee Discovery` is a small web API employee workflow application using Spring Boot. It registers new employees and describes for which projects they are working on with timestamps. The application provides the following functionalities:
+`Employee Discovery` is a small web API employee workflow application using Spring Boot. It can register new employees and describe which projects they are working on with time limits. The application provides the following functionalities:
 
 Functionalities for employees data
 ---
