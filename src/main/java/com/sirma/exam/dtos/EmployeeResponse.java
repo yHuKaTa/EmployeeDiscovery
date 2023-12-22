@@ -15,13 +15,15 @@ public class EmployeeResponse {
         this.jobsList = jobsList;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Employee: ").append(firstName).append(" ").append(lastName).append(" is working in projects:\n");
-        for (Job project : jobsList) {
-            builder.append(project.getProject().getProjectName()).append(" from: ").append(project.getStartDate().toString()).append(" to: ").append(project.getEndDate().toString()).append("\n");
-        }
-        return builder.toString();
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public Set<Job> getJobsList() {
+        return jobsList;
     }
 }

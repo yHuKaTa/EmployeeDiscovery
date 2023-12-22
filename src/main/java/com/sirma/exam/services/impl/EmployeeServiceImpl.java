@@ -64,7 +64,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponse saveNewEmployee(AddEmployeeRequest request) {
-        if (repository.DoesNotExistByPassportId(request.getPassportId())) {
+        if (!(repository.existsByPassportId(request.getPassportId()))) {
             Employee employee = repository.save(EmployeeConverter.toNewEmployee(request));
             return getById(employee.getId());
         } else {
@@ -75,7 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponse fireEmployee(Long id, FireEmployeeRequest request) {
-        if (id.equals(request.getId()) && repository.existsById(request.getId()) && !repository.DoesNotExistByPassportId(request.getPassportId())) {
+        if (id.equals(request.getId()) && repository.existsById(request.getId()) && repository.existsByPassportId(request.getPassportId())) {
             repository.fireEmployee(true, request.getId(), request.getPassportId());
             return getById(id);
         } else throw new IllegalArgumentException("Invalid provided data!");
@@ -92,11 +92,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponse editEmployeeByPassportId(String passportId, EditEmployeeRequest request) {
-        if (!repository.DoesNotExistByPassportId(passportId)) {
+        if (repository.existsByPassportId(passportId)) {
             repository.editEmployee(request.getFirstName(), request.getLastName(), passportId);
             return EmployeeConverter.toResponse(getEmployeeByPassportId(passportId));
         } else {
-            return null;
+            // Not to give away personal data if this one exists or not
+            throw new IllegalArgumentException("Invalid provided data!");
         }
     }
 }

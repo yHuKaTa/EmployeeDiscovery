@@ -111,6 +111,9 @@ public class JobServiceImpl implements JobService {
                     Employee employee = null;
                     if (currentEmployeeService.existsById(job.getEmployeeId())) {
                         employee = currentEmployeeService.getEmployeeByPassportId(passportId);
+                        if (employee.isFired()) {
+                            throw new EntityNotFoundException("Employee with this ID does not exists!");
+                        }
                         return JobConverter.toResponse(repository.save(new Job(employee, project, startDate, endDate)));
                     } else throw new EntityNotFoundException("Employee with this ID does not exists!");
                 } else

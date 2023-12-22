@@ -16,8 +16,8 @@ import java.util.Set;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByPassportId(String passportId);
 
-    @Query("select (count(e) > 0) from Employee e where e.passportId <> ?1")
-    boolean DoesNotExistByPassportId(String passportId);
+    @Query("select (count(e) > 0) from Employee e where e.passportId = ?1")
+    boolean existsByPassportId(String passportId);
 
     @Transactional
     @Modifying
