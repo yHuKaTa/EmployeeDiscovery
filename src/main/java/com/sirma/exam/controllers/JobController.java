@@ -5,6 +5,7 @@ import com.sirma.exam.dtos.EmployeeResponse;
 import com.sirma.exam.dtos.JobResponse;
 import com.sirma.exam.services.JobService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class JobController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<JobResponse> getJobById(@PathVariable @Pattern(regexp = "[\\d]+", message = "Job ID must contain only digits") @Valid Long id) {
+    public ResponseEntity<JobResponse> getJobById(@PathVariable @Digits(integer = 19, fraction = 0, message = "Job ID must contain only digits!") @Valid Long id) {
         JobResponse response = service.getById(id);
         if (Objects.isNull(response)) {
             return ResponseEntity.notFound().build();
@@ -57,7 +58,7 @@ public class JobController {
     }
 
     @GetMapping("/employee/{id}")
-    public ResponseEntity<List<JobResponse>> getJobsByEmployeeId(@PathVariable @Pattern(regexp = "[\\d]+", message = "Employee ID must contain only digits") @Valid Long id) {
+    public ResponseEntity<List<JobResponse>> getJobsByEmployeeId(@PathVariable @Digits(integer = 19, fraction = 0, message = "Employee ID must contain only digits!") @Valid Long id) {
         List<JobResponse> responses = service.getJobsByEmployeeId(id);
         if (Objects.isNull(responses) || responses.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -67,7 +68,7 @@ public class JobController {
     }
 
     @GetMapping("/project/{id}")
-    public ResponseEntity<List<JobResponse>> getJobsByProjectId(@PathVariable @Pattern(regexp = "[\\d]+", message = "Project ID must contain only digits") @Valid Long id) {
+    public ResponseEntity<List<JobResponse>> getJobsByProjectId(@PathVariable @Digits(integer = 19, fraction = 0, message = "Project ID must contain only digits!") @Valid Long id) {
         List<JobResponse> responses = service.getJobsByProjectId(id);
         if (Objects.isNull(responses) || responses.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -88,7 +89,7 @@ public class JobController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteJob(@PathVariable @Pattern(regexp = "[\\d]+", message = "Project ID must contain only digits") @Valid Long id) {
+    public ResponseEntity<?> deleteJob(@PathVariable @Digits(integer = 19, fraction = 0, message = "Job ID must contain only digits!") @Valid Long id) {
         if (service.deleteById(id)) {
             return ResponseEntity.noContent().build();
         } else {
@@ -97,7 +98,7 @@ public class JobController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<JobResponse> editJob(@PathVariable @Pattern(regexp = "[\\d]+", message = "Project ID must contain only digits") @Valid Long id,
+    public ResponseEntity<JobResponse> editJob(@PathVariable @Digits(integer = 19, fraction = 0, message = "Job ID must contain only digits!") @Valid Long id,
                                                @RequestBody @NotBlank @Pattern(regexp = "[\\w\\p{Punct}]", message = "Description must contain alphanumeric text with punctuations.") @Valid String description) {
         JobResponse response = service.editJobById(id, description);
         if (Objects.isNull(response)) {
