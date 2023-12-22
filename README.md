@@ -32,7 +32,7 @@ Functionalities for jobs data
 * View job's of two top teamwork employees
 * Edit job's description
 * Delete job
-* 
+
 
 ## Launching
 
