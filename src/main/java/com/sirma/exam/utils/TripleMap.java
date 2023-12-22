@@ -2,6 +2,14 @@ package com.sirma.exam.utils;
 
 import java.util.*;
 
+/**
+ * The TripleMap class represents a data structure that associates two keys (Key1 and Key2) with a corresponding value.
+ * It allows for efficient retrieval, addition, and removal of values based on the two keys.
+ *
+ * @param <Key1> The type of the first key.
+ * @param <Key2> The type of the second key.
+ * @param <Value> The type of the value associated with the keys.
+ */
 public class TripleMap<Key1, Key2, Value> {
     private final List<Value> values = new ArrayList<>();
 
@@ -20,6 +28,14 @@ public class TripleMap<Key1, Key2, Value> {
         return null;
     }
 
+    /**
+     * Adds a value to the TripleMap, associating it with the specified Key1 and Key2.
+     * If the combination of keys already exists, the existing value is replaced.
+     *
+     * @param key1  The first key.
+     * @param key2  The second key.
+     * @param value The value to be associated with the keys.
+     */
     public void addValue(Key1 key1, Key2 key2, Value value) {
         if (Objects.nonNull(key1) && Objects.nonNull(key2)) {
             if (contains(key1, key2)) {
@@ -39,6 +55,13 @@ public class TripleMap<Key1, Key2, Value> {
         }
     }
 
+    /**
+     * Retrieves the value associated with the specified Key1 and Key2.
+     *
+     * @param key1 The first key.
+     * @param key2 The second key.
+     * @return The value associated with the keys, or null if not found.
+     */
     public Value get(Key1 key1, Key2 key2) {
         Integer index = findIndexByKey(key1, key2);
         if (Objects.nonNull(index)) {
@@ -48,6 +71,13 @@ public class TripleMap<Key1, Key2, Value> {
         }
     }
 
+    /**
+     * Retrieves all values associated with the specified Key1.
+     *
+     * @param key1 The first key.
+     * @return A list of values associated with the specified Key1.
+     *         Returns an empty list if no values are associated with the key.
+     */
     public List<Value> getAll(Key1 key1) {
         Map<Key2, Integer> key2IndexMap;
         if (Objects.nonNull(key1)) {
@@ -62,6 +92,11 @@ public class TripleMap<Key1, Key2, Value> {
         return searched;
     }
 
+    /**
+     * Removes all entries associated with the specified Key1 from the TripleMap.
+     *
+     * @param key1 The first key.
+     */
     public void remove(Key1 key1) {
         if (contains(key1)) {
             for (Map.Entry<Key2, Integer> entry : matching.get(key1).entrySet()) {
@@ -74,6 +109,12 @@ public class TripleMap<Key1, Key2, Value> {
         }
     }
 
+    /**
+     * Removes the entry associated with the specified Key1 and Key2 from the TripleMap.
+     *
+     * @param key1 The first key.
+     * @param key2 The second key.
+     */
     public void remove(Key1 key1, Key2 key2) {
         if (contains(key1, key2)) {
             if (Objects.nonNull(matching.get(key1).get(key2))) {
@@ -84,6 +125,13 @@ public class TripleMap<Key1, Key2, Value> {
         }
     }
 
+    /**
+     * Checks if the TripleMap contains an entry for the specified Key1 and Key2.
+     *
+     * @param key1 The first key.
+     * @param key2 The second key.
+     * @return true if the entry exists, false otherwise.
+     */
     public boolean contains(Key1 key1, Key2 key2) {
         if (Objects.nonNull(key1) && Objects.nonNull(key2)) {
             return matching.containsKey(key1) && matching.get(key1).containsKey(key2);
@@ -91,8 +139,12 @@ public class TripleMap<Key1, Key2, Value> {
         return false;
     }
 
-    ;
-
+    /**
+     * Checks if the TripleMap contains any entry associated with the specified Key1.
+     *
+     * @param key1 The first key.
+     * @return true if entries exist for the key, false otherwise.
+     */
     public boolean contains(Key1 key1) {
         if (Objects.nonNull(key1)) {
             return matching.containsKey(key1);
@@ -100,6 +152,11 @@ public class TripleMap<Key1, Key2, Value> {
         return false;
     }
 
+    /**
+     * Checks if the TripleMap is empty, i.e., it contains no entries.
+     *
+     * @return true if the TripleMap is empty, false otherwise.
+     */
     public boolean isEmpty() {
         return matching.isEmpty() && values.isEmpty();
     }
