@@ -98,7 +98,7 @@ public class JobController {
 
     @PutMapping("/{id}")
     public ResponseEntity<JobResponse> editJob(@PathVariable @Pattern(regexp = "[\\d]+", message = "Project ID must contain only digits") @Valid Long id,
-                                               @NotBlank @Pattern(regexp = "[\\w\\p{Punct}]", message = "Description must contain alphanumeric text with punctuations.") @Valid String description) {
+                                               @RequestBody @NotBlank @Pattern(regexp = "[\\w\\p{Punct}]", message = "Description must contain alphanumeric text with punctuations.") @Valid String description) {
         JobResponse response = service.editJobById(id, description);
         if (Objects.isNull(response)) {
             return ResponseEntity.badRequest().build();
