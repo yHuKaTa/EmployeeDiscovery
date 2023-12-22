@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -167,44 +168,32 @@ public class JobServiceImpl implements JobService {
         }
     }
 
-    private boolean recordsOverlap(Job record1, Job record2) {
-        long time1 = ChronoUnit.DAYS.between(record1.getStartDate(), record1.getEndDate());
-        long time2 = ChronoUnit.DAYS.between(record2.getStartDate(), record2.getEndDate());
-        if (time1 >= time2) {
-            return (record1.getStartDate().isBefore(record2.getStartDate()) ||
-                    record1.getStartDate().isEqual(record2.getStartDate())) &&
-                    (record2.getStartDate().isBefore(record1.getEndDate()) ||
-                            record2.getEndDate().isBefore(record1.getEndDate())
-                            || record2.getEndDate().isEqual(record1.getEndDate()));
-        } else {
-            return (record2.getStartDate().isBefore(record1.getStartDate()) ||
-                    record2.getStartDate().isEqual(record1.getStartDate())) &&
-                    (record1.getStartDate().isBefore(record2.getEndDate()) ||
-                            record1.getEndDate().isBefore(record2.getEndDate())
-                            || record1.getEndDate().isEqual(record2.getEndDate()));
-        }
-    }
+
 
     private Set<Employee> getTopEmployees() {
-        Set<Employee> employees = null;
+        Set<Employee> employees;
         if (employeeService instanceof EmployeeServiceImpl currentEmployeeService) {
             employees = currentEmployeeService.employees();
+        } else {
+            employees = null;
         }
-        Set<Employee> pairEmployees = new HashSet<>();
-        if (Objects.nonNull(employees) && !employees.isEmpty()) {
-            for (Employee employee : employees) {
-                for (Job job : employee.getJobs()) {
-                    for (Employee otherEmployee : employees) {
-                        for (Job otherJob : otherEmployee.getJobs()) {
-                            if (job.getProject().equals(otherJob.getProject()) && recordsOverlap(job, otherJob)) {
-                                pairEmployees.add(employee);
-                                pairEmployees.add(otherEmployee);
-                            }
-                        }
-                    }
-                }
-            }
-
+        Set<Employee> pairEmployees;
+        if (Objects.nonNull(employees) && !employees.isEmpty() && employees.size() > 1) {
+            pairEmployees = employees.parallelStream()
+                    .flatMap(employee -> employees.parallelStream()
+                            .filter(otherEmployee -> !employee.equals(otherEmployee))
+                            .flatMap(otherEmployee -> employee.getJobs().parallelStream()
+                                    .flatMap(job -> otherEmployee.getJobs().parallelStream()
+                                            .filter(otherJob -> job.getProject().equals(otherJob.getProject()) && recordsOverlap(job, otherJob))
+                                            .map(otherJob -> List.of(employee, otherEmployee))
+                                    )
+                            )
+                    )
+                    .flatMap(List::stream)
+                    .collect(Collectors.toSet());
+        if (pairEmployees.size() < 2) {
+            return null;
+        }
             return pairEmployees.stream()
                     .sorted(Comparator.comparingLong(employee ->
                             employee.getJobs().stream()
@@ -213,6 +202,37 @@ public class JobServiceImpl implements JobService {
         } else {
             return null;
         }
+    }
+
+    private boolean recordsOverlap(Job record1, Job record2) {
+        if (record1.getEndDate().isBefore(record2.getStartDate())) {
+            return false;
+        }
+        if (record2.getEndDate().isBefore(record1.getStartDate())) {
+            return false;
+        }
+        if (isPeriodGraterThen(record1, record2)) {
+            return (record1.getStartDate().isBefore(record2.getStartDate()) ||
+                    record1.getStartDate().isEqual(record2.getStartDate()));
+        } else {
+            return (record2.getStartDate().isBefore(record1.getStartDate()) ||
+                    record2.getStartDate().isEqual(record1.getStartDate()));
+        }
+    }
+
+    private Long calculateDates(Job record1, Job record2) {
+        if (isPeriodGraterThen(record1, record2)) {
+            return ChronoUnit.DAYS.between(record2.getStartDate(), record1.getEndDate());
+        } else {
+            return ChronoUnit.DAYS.between(record1.getStartDate(), record2.getEndDate());
+        }
+    }
+
+
+    private boolean isPeriodGraterThen(Job record1, Job record2) {
+        long time1 = ChronoUnit.DAYS.between(record1.getStartDate(), record1.getEndDate());
+        long time2 = ChronoUnit.DAYS.between(record2.getStartDate(), record2.getEndDate());
+        return  (time1 >= time2);
     }
 }
 

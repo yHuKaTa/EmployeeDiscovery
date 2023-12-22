@@ -26,7 +26,7 @@ public class JobController {
         this.service = service;
     }
 
-    @GetMapping(path = "/topEmployees")
+    @GetMapping(path = "/topPair")
     public ResponseEntity<List<EmployeeResponse>> getTopEmployees() {
         List<EmployeeResponse> response = service.findPairOfEmployee();
         if (Objects.isNull(response) || response.isEmpty()) {
@@ -36,7 +36,7 @@ public class JobController {
         }
     }
 
-    @GetMapping(path = "/topEmployees/jobs")
+    @GetMapping(path = "/topPair/jobs")
     public ResponseEntity<List<JobResponse>> getJobsOfTopEmployees() {
         List<JobResponse> responses = service.findAllProjectsForEmployees();
         if (Objects.isNull(responses) || responses.isEmpty()) {
