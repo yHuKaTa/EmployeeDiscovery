@@ -4,6 +4,7 @@ import com.sirma.exam.dtos.*;
 import com.sirma.exam.models.Project;
 import com.sirma.exam.services.ProjectService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ProjectController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<ProjectResponse> getProjectById(@PathVariable @Pattern(regexp = "[\\d]+", message = "Project ID must contain only digits") @Valid Long id) {
+    public ResponseEntity<ProjectResponse> getProjectById(@PathVariable @Digits(integer = 19, fraction = 0, message = "Project ID must contain only digits!") @Valid Long id) {
         ProjectResponse response = service.getById(id);
         if (Objects.isNull(response)) {
             return ResponseEntity.notFound().build();
@@ -35,7 +36,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}/get")
-    public ResponseEntity<Project> getProjectById(@PathVariable @Pattern(regexp = "[\\d]+", message = "Project ID must contain only digits") @Valid Long id,
+    public ResponseEntity<Project> getProjectById(@PathVariable @Digits(integer = 19, fraction = 0, message = "Project ID must contain only digits!") @Valid Long id,
             @RequestHeader(name = "passportId") @Pattern(regexp = "[\\d]{8,}", message = "Passport ID must contain at least 8 digits") @Valid String passportId) {
         Project project = service.getProjectById(id, passportId);
         if (Objects.nonNull(project)) {
@@ -66,7 +67,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteProject(@PathVariable @Pattern(regexp = "[\\d]+", message = "Project ID must contain only digits") @Valid Long id) {
+    public ResponseEntity<?> deleteProject(@PathVariable @Digits(integer = 19, fraction = 0, message = "Project ID must contain only digits!") @Valid Long id) {
         if (service.deleteProjectById(id)) {
             return ResponseEntity.noContent().build();
         } else {
@@ -75,7 +76,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProjectResponse> editProjectById(@Pattern(regexp = "[\\d]+", message = "Project ID must contain only digits") @Valid Long id,
+    public ResponseEntity<ProjectResponse> editProjectById(@Digits(integer = 19, fraction = 0, message = "Project ID must contain only digits!") @Valid Long id,
                                                              @RequestBody @Valid EditProjectRequest request,
                                                            @RequestHeader("passportId") @Pattern(regexp = "[\\d]{8,}", message = "Passport ID must contain at least 8 digits") @Valid String passportId) {
         ProjectResponse response = service.editProjectById(id, request, passportId);
