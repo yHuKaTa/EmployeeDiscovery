@@ -52,8 +52,9 @@ Functionalities for jobs data
 #### Get employee by ID
 * GET -> http://localhost:8080/employees/get
 
-
-    *Required Header: passportId = {passportID}
+```
+    Required Header: passportId = {passportID}
+```
 
 #### Get all employees data
 * GET -> http://localhost:8080/employees
@@ -61,23 +62,25 @@ Functionalities for jobs data
 #### Add new employee
 * POST -> http://localhost:8080/employees
 
-
+```
     Required Body:
     {
         "firstName" : "FirstName",
         "lastName" : "LastName",
         "passportId" : "000000000"
     }
+```
 
 #### Fire employee by ID and passport ID
 * POST -> http://localhost:8080/employees/{id}/fire
 
-
+```
     Required Body:
     {
         "id" : "2525",
         "passportId" : "000000000"
     }
+```
 
 #### Delete employee by ID
 * DELETE -> http://localhost:8080/employees/{id}
@@ -85,7 +88,7 @@ Functionalities for jobs data
 #### Edit employee by passport ID
 * PUT -> http://localhost:8080/employees
     
-
+```
     Required Header: passportId = {passportId}
 
     Required Body:
@@ -93,6 +96,7 @@ Functionalities for jobs data
         "firstName" : "FirstName",
         "lastName" : "LastName"
     }
+```
 
 ### Project Layer
 
@@ -102,8 +106,9 @@ Functionalities for jobs data
 #### Get project by ID
 * GET -> http://localhost:8080/projects/get
 
-
+```
     *Required Header: passportId = {passportID}
+```
 
 #### Find all projects data
 * GET -> http://localhost:8080/projects
@@ -111,13 +116,14 @@ Functionalities for jobs data
 #### Add new project
 * POST -> http://localhost:8080/projects
 
-
+```
     Required Body:
     {
         "projectName" : "EmployeeDiscovery",
         "startDate" : "2023-12-16",
         "endDate" : "2023-12-23"
     }
+```
 
 #### Delete project by ID
 * DELETE -> http://localhost:8080/projects/{id}
@@ -125,13 +131,14 @@ Functionalities for jobs data
 #### Edit project end date by employee's passport ID
 * PUT -> http://localhost:8080/projects
 
-
+```
     Required Header: passportId = {passportId}
 
     Required Body:
     {
         "endDate" : "2024-01-04"
     }
+```
 
 ### Job Layer
 
@@ -153,7 +160,7 @@ Functionalities for jobs data
 #### Add new job to employee
 * POST -> http://localhost:8080/jobs
 
-
+```
     Required Header: passportId = {pasportId}
 
     Required Body:
@@ -164,6 +171,7 @@ Functionalities for jobs data
         "startDate" : "2023-12-16",
         "endDate"   : "null"
     }
+```
 
 #### Delete job by ID
 * DELETE -> http://localhost:8080/jobs/{id}
@@ -171,11 +179,12 @@ Functionalities for jobs data
 #### Edit job's description by ID
 * PUT -> http://localhost:8080/jobs/{id}
 
-
+```
     Required Body:
     {
         "description" : "New text here!"
     }
+```
 
 ## Technologies
 
