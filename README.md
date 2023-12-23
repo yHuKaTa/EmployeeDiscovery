@@ -49,7 +49,7 @@ Functionalities for jobs data
 #### Find employee data by ID
 * GET -> http://localhost:8080/employees/{id}
 
-#### Get employee by ID
+#### Get employee by passport ID
 * GET -> http://localhost:8080/employees/get
 
 ```
@@ -104,7 +104,7 @@ Functionalities for jobs data
 * GET -> http://localhost:8080/projects/{id}
 
 #### Get project by ID
-* GET -> http://localhost:8080/projects/get
+* GET -> http://localhost:8080/projects/{id}/get
 
 ```
     *Required Header: passportId = {passportID}
