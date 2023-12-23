@@ -1,6 +1,7 @@
 package com.sirma.exam.dtos;
 
 import com.sirma.exam.utils.annotations.ValidDateFormat;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.validation.annotation.Validated;
@@ -10,10 +11,10 @@ public class AddJobToEmployeeRequest {
     @NotBlank
     @Pattern(regexp = "[\\w\\p{Punct}]", message = "Description must contain alphanumeric text with punctuations.")
     private String description;
-    @Pattern(regexp = "[\\d]+", message = "Employee ID must contain only digits")
+    @Digits(integer = 19, fraction = 0, message = "Job ID must contain only digits!")
     private Long employeeId;
 
-    @Pattern(regexp = "[\\d]+", message = "Project ID must contains only digits")
+    @Digits(integer = 19, fraction = 0, message = "Job ID must contain only digits!")
     private Long projectId;
 
     @ValidDateFormat
