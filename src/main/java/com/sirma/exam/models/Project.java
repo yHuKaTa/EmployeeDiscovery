@@ -1,5 +1,6 @@
 package com.sirma.exam.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -27,6 +28,7 @@ public class Project {
     private LocalDate endDate;
 
     @ManyToMany(mappedBy = "project")
+    @JsonBackReference
     private Set<Job> jobs;
 
     public Project() {}

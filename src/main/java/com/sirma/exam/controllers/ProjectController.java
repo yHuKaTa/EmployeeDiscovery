@@ -76,7 +76,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProjectResponse> editProjectById(@Digits(integer = 19, fraction = 0, message = "Project ID must contain only digits!") @Valid Long id,
+    public ResponseEntity<ProjectResponse> editProjectById(@PathVariable @Digits(integer = 19, fraction = 0, message = "Project ID must contain only digits!") @Valid Long id,
                                                              @RequestBody @Valid EditProjectRequest request,
                                                            @RequestHeader("passportId") @Pattern(regexp = "[\\d]{8,}", message = "Passport ID must contain at least 8 digits") @Valid String passportId) {
         ProjectResponse response = service.editProjectById(id, request, passportId);

@@ -12,8 +12,9 @@ import java.time.LocalDate;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
-    @Query("select (count(p) > 0) from Project p where p.projectName <> ?1")
-    boolean doesNotExistsByProjectName(String projectName);
+    @Query("select (count(p) > 0) from Project p where p.projectName = ?1")
+    boolean existsByProjectName(String projectName);
+
 
     @Transactional
     @Modifying

@@ -72,7 +72,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse saveNewProject(AddNewProjectRequest request) {
-        if (repository.doesNotExistsByProjectName(request.getProjectName())) {
+        if (!(repository.existsByProjectName(request.getProjectName()))) {
             Project project = repository.save(ProjectConverter.toNewProject(request));
             return getById(project.getId());
         } else {

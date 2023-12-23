@@ -1,5 +1,6 @@
 package com.sirma.exam.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -18,9 +19,11 @@ public class Job {
     private String description;
 
     @ManyToOne
+    @JsonManagedReference
     private Employee employee;
 
     @ManyToOne
+    @JsonManagedReference
     private Project project;
 
     @Column(name = "start_date", nullable = false)
@@ -33,7 +36,8 @@ public class Job {
 
     public Job() {}
 
-    public Job(Employee employee, Project project, LocalDate startDate, LocalDate endDate) {
+    public Job(String description, Employee employee, Project project, LocalDate startDate, LocalDate endDate) {
+        this.description = description;
         this.employee = employee;
         this.project = project;
         this.startDate = startDate;

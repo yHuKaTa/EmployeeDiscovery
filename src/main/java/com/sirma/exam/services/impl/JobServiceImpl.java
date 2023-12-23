@@ -114,11 +114,11 @@ public class JobServiceImpl implements JobService {
                         if (employee.isFired()) {
                             throw new EntityNotFoundException("Employee with this ID does not exists!");
                         }
-                        return JobConverter.toResponse(repository.save(new Job(employee, project, startDate, endDate)));
+                        return JobConverter.toResponse(repository.save(new Job(job.getDescription(), employee, project, startDate, endDate)));
                     } else throw new EntityNotFoundException("Employee with this ID does not exists!");
                 } else
                     throw new IllegalArgumentException("Provide valid start and end date of the job according to the project!");
-            } else throw new EntityNotFoundException("Unable to receive information!");
+            } else throw new EntityNotFoundException("Unable to receive information! Contact technical support for more details.");
         } else throw new IllegalArgumentException("Provide valid start and end date!");
     }
 

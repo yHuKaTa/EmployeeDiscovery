@@ -1,17 +1,21 @@
 package com.sirma.exam.dtos;
 
 import com.sirma.exam.utils.annotations.ValidDateFormat;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
 public class AddNewProjectRequest {
-    @Pattern(regexp = "[\\a]{8,}", message = "Project Name must contains at least 8 symbols")
+    @NotBlank(message = "Project name must contain at least 8 symbols")
+    @Pattern(regexp = "[\\w]{8,}", message = "Project Name must contains at least 8 symbols")
     private String projectName;
 
+    @NotBlank(message = "Start date of project must be not blank")
     @ValidDateFormat
     private String startDate;
 
+    @NotBlank(message = "End date of project must be not blank")
     @ValidDateFormat
     private String endDate;
 

@@ -1,5 +1,6 @@
 package com.sirma.exam.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -25,6 +26,7 @@ public class Employee {
     private boolean isFired;
 
     @ManyToMany(mappedBy = "employee")
+    @JsonBackReference
     private Set<Job> jobs;
 
     public Employee() {}

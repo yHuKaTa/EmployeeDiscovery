@@ -1,15 +1,13 @@
 package com.sirma.exam.dtos;
 
-import com.sirma.exam.models.Job;
-
 import java.util.Set;
 
 public class EmployeeResponse {
     private String firstName;
     private String lastName;
-    private Set<Job> jobsList;
+    private Set<JobResponse> jobsList;
 
-    public EmployeeResponse(String firstName, String lastName, Set<Job> jobsList) {
+    public EmployeeResponse(String firstName, String lastName, Set<JobResponse> jobsList) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.jobsList = jobsList;
@@ -23,7 +21,7 @@ public class EmployeeResponse {
         return lastName;
     }
 
-    public Set<Job> getJobsList() {
+    public Set<JobResponse> getJobsList() {
         return jobsList;
     }
 }
