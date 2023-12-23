@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-@Table(name = "jobs", uniqueConstraints = {@UniqueConstraint(columnNames = {"employee_id", "project_id", "start_date", "end_date"})})
+@Table(name = "jobs")
 public class Job {
     @Id
     @Column(name = "id")

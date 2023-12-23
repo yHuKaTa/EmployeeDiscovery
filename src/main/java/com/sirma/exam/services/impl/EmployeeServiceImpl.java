@@ -28,8 +28,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         return repository.existsById(id);
     }
 
-    Set<Employee> employees() {
-        return Set.copyOf(repository.findAll());
+    List<Employee> employees() {
+        return repository.findAll();
     }
 
     @Override
