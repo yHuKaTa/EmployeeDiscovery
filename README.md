@@ -123,13 +123,14 @@ Functionalities for jobs data
         "startDate" : "2023-12-16",
         "endDate" : "2023-12-23"
     }
+    *Dates must be equals or after today
 ```
 
 #### Delete project by ID
 * DELETE -> http://localhost:8080/projects/{id}
 
 #### Edit project end date by employee's passport ID
-* PUT -> http://localhost:8080/projects
+* PUT -> http://localhost:8080/projects/{id}
 
 ```
     Required Header: passportId = {passportId}
@@ -181,9 +182,7 @@ Functionalities for jobs data
 
 ```
     Required Body:
-    {
-        "description" : "New text here!"
-    }
+    New text here for current job
 ```
 
 ## Technologies
