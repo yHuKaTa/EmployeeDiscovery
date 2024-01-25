@@ -43,7 +43,7 @@ Functionalities for jobs data
 * Test the app in Postman with following requests:
 
 * Install Docker:
-    * <a href=https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe?utm_source=docker&utm_medium=webreferral&utm_campaign=dd-smartbutton&utm_location=module> Windows x64</a>
+    * <a href="https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe?utm_source=docker&utm_medium=webreferral&utm_campaign=dd-smartbutton&utm_location=module"> Windows x64</a>
     * <a href=https://www.docker.com/>For other platforms visit site</a>
 * Open "Terminal" or "Command Promt".
 * Insert in terminal -> 'project_location'/docker compose up
