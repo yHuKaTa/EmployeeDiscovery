@@ -42,6 +42,12 @@ Functionalities for jobs data
 * Insert in terminal -> 'project_location'/java -jar employee.jar
 * Test the app in Postman with following requests:
 
+* Install Docker:
+    * <a href=https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe?utm_source=docker&utm_medium=webreferral&utm_campaign=dd-smartbutton&utm_location=module> Windows x64</a>
+    * <a href=https://www.docker.com/>For other platforms visit site</a>
+* Open "Terminal" or "Command Promt".
+* Insert in terminal -> 'project_location'/docker compose up
+* Test the app in Postman with following requests:
 ## Requests
 
 ### Employee Layer
@@ -191,3 +197,4 @@ Functionalities for jobs data
 * Spring Boot with Spring data JPA and Hibernate
 * Maven 3
 * PostgreSQL
+* Docker
