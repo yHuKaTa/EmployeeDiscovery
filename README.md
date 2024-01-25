@@ -36,12 +36,14 @@ Functionalities for jobs data
 
 ## Launching
 
+Method 1:
 * Install PostgreSQL: <a href=https://www.enterprisedb.com/downloads/postgres-postgresql-downloads> Select your platform here </a>
 * In pgAdmin4 create new database with name "employee" in your server
 * Open "Terminal" or "Command Promt".
 * Insert in terminal -> 'project_location'/java -jar employee.jar
 * Test the app in Postman with following requests:
 
+Method 2:
 * Install Docker:
     * <a href="https://desktop.docker.com/win/main/amd64/Docker%20Desktop%20Installer.exe?utm_source=docker&utm_medium=webreferral&utm_campaign=dd-smartbutton&utm_location=module"> Windows x64</a>
     * <a href=https://www.docker.com/>For other platforms visit site</a>
