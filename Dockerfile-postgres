@@ -1,0 +1,6 @@
+FROM postgres:latest
+RUN apt-get update && apt-get install -y postgresql
+EXPOSE 5432
+ENV POSTGRES_DB employee
+ENV POSTGRES_USER postgres
+ENV POSTGRES_PASSWORD postgres

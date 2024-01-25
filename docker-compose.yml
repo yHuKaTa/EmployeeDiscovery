@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  exam:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: exam-exam
+    container_name: exam
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/employee
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_GENERATE=true
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW-SQL=true
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - db
+    networks:
+      - web
+      - exam-network
+    links:
+      - db
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile-postgres
+    image: exam-db
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_DB: employee
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - exam-network
+networks:
+  web:
+    name: web
+  exam-network:
+    name: exam-network
+    internal: true
+volumes:
+  db:
+    name: db
