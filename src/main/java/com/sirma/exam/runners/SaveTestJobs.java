@@ -1,7 +1,7 @@
 package com.sirma.exam.runners;
 
-import com.sirma.exam.models.Exam;
-import com.sirma.exam.repositories.ExamRepository;
+import com.sirma.exam.models.History;
+import com.sirma.exam.repositories.HistoryRepository;
 import com.sirma.exam.utils.ReadFromCsv;
 import com.sirma.exam.utils.RegExTemplate;
 import com.sirma.exam.utils.StringToDate;
@@ -19,10 +19,10 @@ import java.util.Objects;
 @Component
 @Priority(1)
 public class SaveTestJobs implements CommandLineRunner {
-    private ExamRepository repository;
+    private HistoryRepository repository;
 
     @Autowired
-    public SaveTestJobs(ExamRepository repository) {
+    public SaveTestJobs(HistoryRepository repository) {
         this.repository = repository;
     }
 
@@ -30,36 +30,38 @@ public class SaveTestJobs implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Path path = Paths.get("input_data.csv");
         List<String[]> info = ReadFromCsv.read(path.toAbsolutePath().toString());
-        if (Objects.nonNull(info)) {
-            String regex = RegExTemplate.getRegex();
-            for (String[] line : info) {
-                if (line.length == 4) {
-                    Long empId = null;
-                    Long projId = null;
-                    LocalDate sDate = null;
-                    LocalDate eDate = null;
-                    String employeeId = line[0];
-                    String projectId = line[1];
-                    String startDate = line[2];
-                    String endDate = line[3];
+        if (info.isEmpty()) {
+            return;
+        }
+        String regex = RegExTemplate.getRegex();
+        for (String[] line : info) {
+            if (line.length == 4) {
+                Long empId = null;
+                Long projId = null;
+                LocalDate sDate = null;
+                LocalDate eDate = null;
+                String employeeId = line[0];
+                String projectId = line[1];
+                String startDate = line[2];
+                String endDate = line[3];
 
-                    if (employeeId.matches("[\\d]+")) {
-                        empId = Long.parseLong(employeeId);
-                    }
-                    if (projectId.matches("[\\d]+")) {
-                        projId = Long.parseLong(projectId);
-                    }
-                    if (startDate.matches(regex)) {
-                        sDate = StringToDate.toLocalDate(startDate);
-                    }
-                    if (!endDate.equalsIgnoreCase("null") && endDate.matches(regex)) {
-                        eDate = StringToDate.toLocalDate(endDate);
-                    }
-                    if (Objects.nonNull(empId) && Objects.nonNull(projId) && Objects.nonNull(sDate) && Objects.isNull(eDate)) {
-                        repository.save(new Exam(empId, projId, sDate, eDate));
-                    } else if (Objects.nonNull(empId) && Objects.nonNull(projId) && Objects.nonNull(sDate) && eDate.isAfter(sDate)) {
-                        repository.save(new Exam(empId, projId, sDate, eDate));
-                    }
+                if (employeeId.matches("[\\d]+")) {
+                    empId = Long.parseLong(employeeId);
+                }
+                if (projectId.matches("[\\d]+")) {
+                    projId = Long.parseLong(projectId);
+                }
+                if (startDate.matches(regex)) {
+                    sDate = StringToDate.toLocalDate(startDate);
+                }
+                if (!endDate.equalsIgnoreCase("null") && endDate.matches(regex)) {
+                    eDate = StringToDate.toLocalDate(endDate);
+                }
+                if (Objects.nonNull(empId) && Objects.nonNull(projId) && Objects.nonNull(sDate) && Objects.isNull(eDate)) {
+                    repository.save(new History(empId, projId, sDate, null));
+                    // WHY YOU FORGOT TO TELL THAT CODE HAVE VALIDATION FOR DATE SWITCHING!!! -> eDate.isAfter(sDate)
+                } else if (Objects.nonNull(empId) && Objects.nonNull(projId) && Objects.nonNull(sDate) && eDate.isAfter(sDate)) {
+                    repository.save(new History(empId, projId, sDate, eDate));
                 }
             }
         }

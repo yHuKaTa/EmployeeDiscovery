@@ -34,17 +34,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponse getById(Long id) {
-        Optional<Employee> employee = repository.findById(id);
-        if (employee.isPresent()) {
-            Employee searchedEmployee = employee.get();
-            return EmployeeConverter.toResponse(searchedEmployee);
-        } else throw new EntityNotFoundException("Employee not found!");
+        return EmployeeConverter.toResponse(repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Employee not found!")));
     }
 
     @Override
     public Employee getEmployeeByPassportId(String passportId) {
-        Optional<Employee> employee = repository.findByPassportId(passportId);
-        return employee.orElseThrow(() -> new EntityNotFoundException("Employee not found!"));
+        return repository.findByPassportId(passportId).orElseThrow(() -> new EntityNotFoundException("Employee not found!"));
     }
 
     @Override

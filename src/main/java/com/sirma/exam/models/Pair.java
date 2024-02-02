@@ -1,15 +1,14 @@
 package com.sirma.exam.models;
 
 import jakarta.persistence.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Exam")
-public class Exam {
+@Table(name = "pairs")
+public class Pair {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,32 +16,35 @@ public class Exam {
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;
 
+    @Column(name = "other_employee_id", nullable = false)
+    private Long otherEmployeeId;
+
     @Column(name = "project_id", nullable = false)
     private Long projectId;
 
     @Column(name = "start_date", nullable = false)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "yyyy-MM-yy")
     private LocalDate startDate;
 
     @Column(name = "end_date")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE, pattern = "yyyy-MM-yy")
     private LocalDate endDate;
 
-    public Exam() {}
+    public Pair() {
+    }
 
-    public Exam(Long employeeId, Long projectId, LocalDate startDate, LocalDate endDate) {
+    public Pair(Long employeeId, Long otherEmployeeId, Long projectId, LocalDate startDate, LocalDate endDate) {
         this.employeeId = employeeId;
+        this.otherEmployeeId = otherEmployeeId;
         this.projectId = projectId;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public Long getEmployeeId() {
         return employeeId;
+    }
+
+    public Long getOtherEmployeeId() {
+        return otherEmployeeId;
     }
 
     public Long getProjectId() {
@@ -60,7 +62,7 @@ public class Exam {
         return endDate;
     }
 
-    public Long getDays() {
+    public Long getTimeStamp() {
         if (Objects.isNull(endDate)) {
             return ChronoUnit.DAYS.between(startDate, LocalDate.now());
         }

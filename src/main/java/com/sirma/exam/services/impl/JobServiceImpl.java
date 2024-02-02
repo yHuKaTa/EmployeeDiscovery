@@ -2,13 +2,10 @@ package com.sirma.exam.services.impl;
 
 import com.sirma.exam.converters.EmployeeConverter;
 import com.sirma.exam.converters.JobConverter;
-import com.sirma.exam.converters.ProjectConverter;
 import com.sirma.exam.dtos.AddJobToEmployeeRequest;
 import com.sirma.exam.dtos.EmployeeResponse;
 import com.sirma.exam.dtos.JobResponse;
-import com.sirma.exam.dtos.ProjectResponse;
 import com.sirma.exam.models.Employee;
-import com.sirma.exam.models.Exam;
 import com.sirma.exam.models.Job;
 import com.sirma.exam.models.Project;
 import com.sirma.exam.repositories.JobRepository;
@@ -22,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,11 +42,7 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public JobResponse getById(Long id) {
-        Optional<Job> job = repository.findById(id);
-        if (job.isPresent()) {
-            Job searchedJob = job.get();
-            return JobConverter.toResponse(searchedJob);
-        } else throw new EntityNotFoundException("Job not found!");
+        return JobConverter.toResponse(repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Job not found!")));
     }
 
     @Override
@@ -193,7 +185,7 @@ public class JobServiceImpl implements JobService {
                             )
                     )
                     .flatMap(List::stream)
-                    .collect(Collectors.toList());
+                    .toList();
         if (pairEmployees.size() < 2) {
             return null;
         }

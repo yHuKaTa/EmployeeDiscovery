@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A utility class that converts a string representation of a date to a {@link LocalDate}.
@@ -17,6 +18,9 @@ public class StringToDate {
      * @return {@link LocalDate} The converted date, or null if the input date is invalid
      */
     public static LocalDate toLocalDate(String date) {
+        if (Objects.isNull(date) || date.isEmpty()) {
+            return null;
+        }
         LocalDate generatedDate = null;
         int month = 0;
         List<String> rawData = Arrays.stream(date.trim().split("[\\s\\.\\-\\/,\\\\]")).toList();

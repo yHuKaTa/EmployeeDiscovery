@@ -28,28 +28,30 @@ public class RegExTemplate {
     public static String getRegex() {
         if (Objects.isNull(builder) || builder.isEmpty()) {
             builder = new StringBuilder();
-            String delemiter = "((\\s)|(.)|(-)|(/)|(,)|(\\\\))";
+            String delimiter = "((\\s)|(.)|(-)|(/)|(,)|(\\\\))";
 
             builder.append("(((3[01])|([12][0-9])|((0)?[1-9]))");
-            builder.append(delemiter);
+            builder.append(delimiter);
             builder.append("(((1[1,2])|((0)?[1-9]))|(");
-            builder.append(ReadLabelledMonths.monthsToRegex() + "))");
-            builder.append(delemiter);
+            builder.append(ReadLabelledMonths.monthsToRegex());
+            builder.append("))");
+            builder.append(delimiter);
             builder.append("(2[0-9]{3})");
-            builder.append("(((\\s)?г(.)?)?))|");
-
-            builder.append("(" + ReadLabelledMonths.monthsToRegex() + ")");
-            builder.append(delemiter);
+            builder.append("(((\\s)?г(.)?)?))|(");
+            builder.append(ReadLabelledMonths.monthsToRegex());
+            builder.append(")");
+            builder.append(delimiter);
             builder.append("((3[01])|([12][0-9])|((0)?[1-9]))");
-            builder.append(delemiter);
+            builder.append(delimiter);
             builder.append("(2[0-9]{3})");
             builder.append("(((\\s)?г(.)?)?)|");
 
             builder.append("((2[0-9]{3})");
-            builder.append(delemiter);
+            builder.append(delimiter);
             builder.append("(((1[1,2])|((0)?[1-9]))|(");
-            builder.append(ReadLabelledMonths.monthsToRegex() + "))");
-            builder.append(delemiter);
+            builder.append(ReadLabelledMonths.monthsToRegex());
+            builder.append("))");
+            builder.append(delimiter);
             builder.append("((3[01])|([12][0-9])|((0)?[1-9])))");
 
             return builder.toString();

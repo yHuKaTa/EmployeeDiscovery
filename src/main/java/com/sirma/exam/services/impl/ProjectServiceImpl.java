@@ -40,11 +40,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponse getById(Long id) {
-        Optional<Project> project = repository.findById(id);
-        if (project.isPresent()) {
-            Project searchedProject = project.get();
-            return ProjectConverter.toResponse(searchedProject);
-        } else throw new EntityNotFoundException("Project not found!");
+        return ProjectConverter.toResponse(repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Project not found!")));
     }
 
     @Override

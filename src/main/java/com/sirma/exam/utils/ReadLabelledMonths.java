@@ -19,7 +19,7 @@ public class ReadLabelledMonths {
     public static List<String> monthsToList() {
         List<String[]> val = ReadFromCsv.read("months.csv");
         List<String> months = new LinkedList<>();
-        if (Objects.nonNull(val) && !val.isEmpty()) {
+        if (!val.isEmpty()) {
             for (String[] line : val) {
                 months.addAll(Arrays.asList(line));
             }
@@ -36,28 +36,25 @@ public class ReadLabelledMonths {
         StringBuilder buffer = new StringBuilder();
         Path path = Paths.get("months.csv");
         List<String[]> val = ReadFromCsv.read(path.toAbsolutePath().toString());
-        if (Objects.nonNull(val) && !val.isEmpty()) {
-            String last = val.getLast()[val.getLast().length-1];
-            for (String[] line : val) {
-                if (Objects.nonNull(line)) {
-                    for (String month : line) {
-                        if (!month.isEmpty() && !last.isEmpty() && last.equals(month)) {
-                            buffer.append("(");
-                            buffer.append(month);
-                            buffer.append(")");
-                        } else {
-                            buffer.append("(");
-                            buffer.append(month);
-                            buffer.append(")|");
-                        }
+        if (val.isEmpty()) {
+            return "";
+        }
+        int last = val.size() * val.getLast().length;
+        int current = 1;
+        for (String[] line : val) {
+            if (Objects.nonNull(line)) {
+                for (String month : line) {
+                    buffer.append("(");
+                    buffer.append(month);
+                    if (current == last) {
+                        buffer.append(")");
+                    } else {
+                        buffer.append(")|");
                     }
+                    current++;
                 }
             }
         }
-        if (buffer.isEmpty()) {
-            return "";
-        } else {
-            return buffer.toString();
-        }
+        return buffer.toString();
     }
 }
