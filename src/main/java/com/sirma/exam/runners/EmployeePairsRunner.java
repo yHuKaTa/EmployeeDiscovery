@@ -26,7 +26,6 @@ public class EmployeePairsRunner implements CommandLineRunner {
     public EmployeePairsRunner(HistoryRepository historyRepository, PairRepository pairRepository) {
         this.historyRepository = historyRepository;
         this.pairRepository = pairRepository;
-        this.allHistories = historyRepository.findAll();
     }
 
     @Override
@@ -43,6 +42,7 @@ public class EmployeePairsRunner implements CommandLineRunner {
     }
 
     private Long[] findEmployees() {
+        allHistories = historyRepository.findAll();
         // For all possible cases to optimize speed of this method
         if (allHistories.isEmpty() || allHistories.size() == 1) {
             return null;
@@ -56,18 +56,17 @@ public class EmployeePairsRunner implements CommandLineRunner {
 
         for (History history : allHistories) {
             for (History otherHistory : allHistories) {
-                if (!history.getEmployeeId().equals(otherHistory.getEmployeeId()) &&
+                if (!(history.getEmployeeId().equals(otherHistory.getEmployeeId())) &&
                         history.getProjectId().equals(otherHistory.getProjectId()) &&
                         recordsOverlap(history, otherHistory)) {
-                    if (pairRepository.notExistsInDB(history.getEmployeeId(), otherHistory.getEmployeeId(), history.getProjectId(), calculateStartDate(history, otherHistory), calculateEndDate(history, otherHistory)) &&
-                            pairRepository.notExistsInDB(otherHistory.getEmployeeId(), history.getEmployeeId(), history.getProjectId(), calculateStartDate(history, otherHistory), calculateEndDate(history, otherHistory))) {
+                    if (pairRepository.notExistsInDB(history.getEmployeeId(), otherHistory.getEmployeeId(), history.getProjectId(), calculateStartDate(history, otherHistory), calculateEndDate(history, otherHistory))) {
                         pairRepository.save(new Pair(history.getEmployeeId(), otherHistory.getEmployeeId(), history.getProjectId(), calculateStartDate(history, otherHistory), calculateEndDate(history, otherHistory)));
                     }
                 }
             }
         }
 
-        List<Pair> allPairs = pairRepository.findAll();
+        allPairs = pairRepository.findAll();
         long maxTime = 0L;
         long employee1 = 0L;
         long employee2 = 0L;
@@ -97,10 +96,16 @@ public class EmployeePairsRunner implements CommandLineRunner {
     }
 
     private LocalDate calculateEndDate(History history, History otherHistory) {
-        if (history.getEndDate().isAfter(otherHistory.getEndDate())) {
+        if (Objects.isNull(history.getEndDate()) && Objects.isNull(otherHistory.getEndDate())) {
+            return null;
+        } else if (Objects.isNull(history.getEndDate())) {
+            return otherHistory.getEndDate();
+        } else if (Objects.isNull(otherHistory.getEndDate())) {
+            return history.getEndDate();
+        } else if (history.getEndDate().isAfter(otherHistory.getEndDate())) {
             return otherHistory.getEndDate();
         } else {
-            return history.getStartDate();
+            return history.getEndDate();
         }
     }
 
@@ -113,16 +118,16 @@ public class EmployeePairsRunner implements CommandLineRunner {
     }
 
     private boolean isPeriodGraterThen(History history, History otherHistory) {
-        long time1 = ChronoUnit.DAYS.between(history.getStartDate(), history.getEndDate());
-        long time2 = ChronoUnit.DAYS.between(otherHistory.getStartDate(), otherHistory.getEndDate());
+        long time1 = ChronoUnit.DAYS.between(history.getStartDate(), history.getValidEndDate());
+        long time2 = ChronoUnit.DAYS.between(otherHistory.getStartDate(), otherHistory.getValidEndDate());
         return (time1 >= time2);
     }
 
     private boolean recordsOverlap(History history, History otherHistory) {
-        if (history.getEndDate().isBefore(otherHistory.getStartDate())) {
+        if (history.getValidEndDate().isBefore(otherHistory.getStartDate())) {
             return false;
         }
-        if (otherHistory.getEndDate().isBefore(history.getStartDate())) {
+        if (otherHistory.getValidEndDate().isBefore(history.getStartDate())) {
             return false;
         }
         if (isPeriodGraterThen(history, otherHistory)) {

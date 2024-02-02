@@ -56,9 +56,6 @@ public class Pair {
     }
 
     public LocalDate getEndDate() {
-        if (Objects.isNull(endDate)) {
-            return LocalDate.now();
-        }
         return endDate;
     }
 

@@ -53,6 +53,10 @@ public class History {
     }
 
     public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public LocalDate getValidEndDate() {
         if (Objects.isNull(endDate)) {
             return LocalDate.now();
         }
